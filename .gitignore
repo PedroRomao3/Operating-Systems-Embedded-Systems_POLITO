@@ -1,0 +1,7 @@
+# Starting .gitignore file for now
+*.o
+*.d
+*.elf
+*.out
+*.i
+*.map
