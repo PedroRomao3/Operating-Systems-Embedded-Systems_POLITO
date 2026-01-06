@@ -1,5 +1,4 @@
 #include "logging.h"
-#include "uart.h"
 
 void vLoggingPrintf( const char * pcFormat,
                      ... )
@@ -14,12 +13,12 @@ void vLoggingPrintf( const char * pcFormat,
     UART_printf(string);
 }
 
-void ReleaseLog(char* old, char* new, int old_release_time)
+void ReleaseLog(char* old_name, char* new_name, int now)
 {
-    if(strcmp(old,new))
+    if(strcmp(old_name,new_name))
     {
-        vLoggingPrintf(  "[ %d ] %s release\n", old_release_time, old );
+        vLoggingPrintf(  "[ %d ] %s release\n", now, old_name );
 
-        vLoggingPrintf(  "[ %d ] %s start\n", xTaskGetTickCount(), new );
+        vLoggingPrintf(  "[ %d ] %s start\n", now, new_name );
     }
 }

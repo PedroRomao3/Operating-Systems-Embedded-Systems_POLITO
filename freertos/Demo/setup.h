@@ -6,6 +6,8 @@
 #include "list.h"
 #include "semphr.h"
 #include <stdbool.h>
+#include "logging_stack.h"
+
 
 /**
  * @file setup.h

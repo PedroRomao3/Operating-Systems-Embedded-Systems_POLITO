@@ -31,7 +31,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
-
+#include "uart.h"
 
 /*
  * Initialize a logging system that can be used from FreeRTOS tasks and Win32
@@ -52,5 +52,7 @@ void vLoggingInit( BaseType_t xLogToStdout,
 void vPlatformInitLogging( void );
 
 void vLoggingPrintf( const char * pcFormat, ...);
+
+void ReleaseLog(char* old_name, char* new_name, int now);
 
 #endif /* DEMO_LOGGING_H */
