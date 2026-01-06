@@ -1,10 +1,11 @@
-#ifndef __TEST_H__
-#define __TEST_H__
+#ifndef TEST_H
+#define TEST_H
 
-//Function to create processus
-void vTaskProcessusInit(List_t* PeriodList, List_t* NonPeriodList);
+#include "setup.h"
 
-//Here functions for all process
-void vTaskFunction();
+/**
+ * @brief Create test tasks and register them in PTL lists.
+ */
+void vCreateTestTasks(List_t *Periodic, List_t *NonPeriodic);
 
 #endif

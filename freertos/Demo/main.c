@@ -3,36 +3,44 @@
 #include "setup.h"
 #include "test.h"
 #include "uart.h"
+#include "list.h"
 #include <stdio.h>
 
-#define mainTASK_PRIORITY    ( tskIDLE_PRIORITY + 2 )
-#define N 5000
-
-//define global maybe change it by creation in main and parameters in Scheduler()?
+/* Global task lists */
 List_t PeriodicTaskConfigList;
 List_t NonPeriodicTaskConfigList;
 
-int main(int argc, char **argv){
-
-	(void) argc;
-	(void) argv;
-
+int main(void)
+{
+    /* Initialise process lists */
     UART_init();
-	UART_printf("Initialisation of the Kernel\n");
+    
+    UART_printf("1");
+    vTaskProcessusInit(&PeriodicTaskConfigList, &NonPeriodicTaskConfigList);
 
-	UART_printf("Creation of the processus list\n");
-	// Création of the list of process
-	vTaskProcessusInit(&PeriodicTaskConfigList, &NonPeriodicTaskConfigList);
+    /* Create application tasks */
+    UART_printf("2");
+    vCreateTestTasks(&PeriodicTaskConfigList, &NonPeriodicTaskConfigList);
 
-	// TODO If something needed to initialise process do it here
-	vListProcLaunchPerioc(&PeriodicTaskConfigList);
-	vListProcLaunchNonPerioc(&NonPeriodicTaskConfigList);
+    /* Create FreeRTOS tasks */
+    UART_printf("3");
+    vListProcLaunchPerioc(&PeriodicTaskConfigList);
+    vListProcLaunchNonPerioc(&NonPeriodicTaskConfigList);
 
-	UART_printf("Launch of the Scheduler\n");
+    /* Start periodic task layer */
+    UART_printf("4");
+    vStartPeriodicScheduler(&PeriodicTaskConfigList);
 
-	// Give control to the scheduler
-	vTaskStartScheduler();
+    /* Start FreeRTOS scheduler */
+    vTaskStartScheduler();
 
-	// If everything ok should never reach here
-    for( ; ; );
+    for (;;);
 }
+
+
+#include "FreeRTOS.h"
+#include "task.h"
+#include "setup.h"
+#include "test.h"
+#include "uart.h"
+#include <stdio.h>

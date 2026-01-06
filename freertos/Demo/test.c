@@ -1,28 +1,40 @@
-#include "FreeRTOS.h"
-#include "task.h"
-#include "setup.h"
-#include "uart.h"
-#include <stdio.h>
-#include <stdbool.h>
-#include <string.h>
+#include "test.h"
 
-uint32_t vTaskFunction(void *pv) {
+static void TaskA(void *arg)
+{
+    UART_printf("A");
+    vTaskDelay(pdMS_TO_TICKS(5));
+}
+
+static void TaskB(void *arg)
+{
+    UART_printf("B");
+    vTaskDelay(pdMS_TO_TICKS(18));
+}
+
+static void TaskC(void *arg)
+{
     for (;;) {
-        //work here
-        pv += 1;
-        pv -= 1;
-        for (volatile int i=0; i<150000; ++i) { __asm volatile("nop"); }
-        vTaskSuspend(NULL);
+        UART_printf("C");
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
-    return 0;
 }
 
-void vTaskProcessusInit(List_t* PeriodList, List_t* NonPeriodList){
-    vProcessus *HardProcessOne = vTaskProcessusCreate("proccesP1", vTaskFunction, 5 , 1, false, NULL);
-    vProcessus *HardProcessTwo = vTaskProcessusCreate("proccesP2", vTaskFunction, 5 , 1, false, NULL);
-    vProcessus *SoftProcessThree = vTaskProcessusCreate("proccesNP1", vTaskFunction, 5 , 1, false, NULL);
+void vCreateTestTasks(List_t *Periodic, List_t *NonPeriodic){
+    
+    vCreateAndAddTask("TaskA", TaskA, NULL, 3, true,
+                      pdMS_TO_TICKS(10), pdMS_TO_TICKS(10),
+                      POLICY_SKIP,
+                      Periodic, NonPeriodic);
 
-    TaskConfigListPNP_Add(HardProcessOne, PeriodList, NonPeriodList);
-    TaskConfigListPNP_Add(HardProcessTwo, PeriodList, NonPeriodList);
-    TaskConfigListPNP_Add(SoftProcessThree, PeriodList, NonPeriodList);
+    vCreateAndAddTask("TaskB", TaskB, NULL, 2, true,
+                      pdMS_TO_TICKS(20), pdMS_TO_TICKS(15),
+                      POLICY_KILL,
+                      Periodic, NonPeriodic);
+
+    vCreateAndAddTask("TaskC", TaskC, NULL, 1, false,
+                      0, 0,
+                      POLICY_SKIP,
+                      Periodic, NonPeriodic);
 }
+

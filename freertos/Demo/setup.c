@@ -1,79 +1,200 @@
-#include "FreeRTOS.h"
-#include "task.h"
 #include "setup.h"
-#include "uart.h"
-#include <stdio.h>
 
-int id_counter = 0;
+static uint32_t pid_counter = 0;
 
-void TaskConfigList_Add(vProcessus *slot, List_t* List){
-    // Initialise intern item
-    vListInitialiseItem(&slot->listItem);
+/* -------- INITIALISATION -------- */
 
-    // Ling to get the slot
-    listSET_LIST_ITEM_OWNER(&slot->listItem, slot);
-
-    // Insert the item
-    vListInsertEnd(List, &slot->listItem);
-}
-
-void TaskConfigListPNP_Add(vProcessus *process, List_t *PeriodList, List_t *NonPeriodList){
-    // Check the Type and add it to the correct List_t
-    TaskConfigList_Add(process, (process->type == PTask) ? PeriodList : NonPeriodList);
-}
-
-vProcessus* vTaskProcessusCreate(const char* name, uint32_t (*function)(void*), uint32_t period_time, uint32_t priority, bool is_Period, void *arg){
-    
-    vProcessus *new_task = pvPortMalloc(sizeof(vProcessus));
-
-    //choose the id and increment it for the next process
-    new_task->pid = id_counter;
-    id_counter++;
-
-    //strcpy and \'0' for security
-    strncpy(new_task->name, name, MAXIMUM_NAME_SIZE);
-    new_task->name[MAXIMUM_NAME_SIZE - 1] = '\0';
-
-    new_task->priority = priority;
-    new_task->function = function;
-    new_task->start_waiting_date = 0;
-    new_task->period_time = period_time;
-    new_task->wake_up_time = period_time;
-    new_task->arg = arg;
-
-    new_task->type = is_Period ? PTask : NPTask;
-
-    return new_task;
-}
-void vListProcLaunchPerioc(List_t* PeriodicTaskConfigList)
+void vTaskProcessusInit(List_t *periodic, List_t *nonperiodic)
 {
-    ListItem_t *pxItem;
+    vListInitialise(periodic);
+    vListInitialise(nonperiodic);
+}
 
-    pxItem = listGET_HEAD_ENTRY(PeriodicTaskConfigList);
-    while (pxItem != listGET_END_MARKER(PeriodicTaskConfigList))
-    {
-        vProcessus *obj = (vProcessus *) listGET_LIST_ITEM_OWNER(pxItem);
+/* -------- CREATION -------- */
 
-        // Do something with obj
-        // ...
-        // End
+vProcessus* vTaskProcessusCreate(const char *name,
+                                 TaskFunction_t function,
+                                 void *arg,
+                                 UBaseType_t priority,
+                                 bool is_periodic,
+                                 TickType_t period,
+                                 TickType_t deadline,
+                                 overrun_policy_t policy)
+{
+    vProcessus *p = pvPortMalloc(sizeof(vProcessus));
 
-        pxItem = pxItem->pxNext;  // move to next item
+    p->pid = pid_counter++;
+    strncpy(p->name, name, MAXIMUM_NAME_SIZE);
+    p->name[MAXIMUM_NAME_SIZE - 1] = '\0';
+
+    p->function = function;
+    p->arg = arg;
+    p->priority = priority;
+    p->type = is_periodic ? PTask : NPTask;
+
+    p->period = period;
+    p->deadline = (deadline == 0) ? period : deadline;
+    p->overrun_policy = policy;
+
+    p->state = JOB_IDLE;
+    p->last_release = 0;
+    p->job_id = 0;
+
+    vListInitialiseItem(&p->listItem);
+    listSET_LIST_ITEM_OWNER(&p->listItem, p);
+
+    return p;
+}
+
+/* -------- LIST MANAGEMENT -------- */
+
+void TaskConfigListPNP_Add(vProcessus *process, List_t *PeriodList, List_t *NonPeriodList)
+{
+    vListInsertEnd((process->type == PTask)
+                    ? PeriodList
+                    : NonPeriodList,
+                   &process->listItem);
+}
+
+
+vProcessus* vCreateAndAddTask(const char *name,
+                              TaskFunction_t function,
+                              void *arg,
+                              UBaseType_t priority,
+                              bool is_periodic,
+                              TickType_t period,
+                              TickType_t deadline,
+                              overrun_policy_t policy,
+                              List_t *PeriodList,
+                              List_t *NonPeriodList)
+{
+    vProcessus *p = vTaskProcessusCreate(name, function, arg,
+                                         priority, is_periodic,
+                                         period, deadline, policy);
+
+    TaskConfigListPNP_Add(p, PeriodList, NonPeriodList);
+    return p;
+}
+
+/* -------- PERIODIC WRAPPER -------- */
+
+static void vTaskPeriodicWrapper(void *arg)
+{
+    vProcessus *p = (vProcessus *)arg;
+
+    for (;;) {
+        xSemaphoreTake(p->release_sem, portMAX_DELAY);
+
+        p->state = JOB_RUNNING;
+        p->function(p->arg);
+        p->state = JOB_IDLE;
     }
 }
 
-void vListProcLaunchNonPerioc(List_t* NonPeriodicTaskConfigList){
-        ListItem_t *pxItem;
+/* -------- TASK LAUNCH -------- */
 
-    pxItem = listGET_HEAD_ENTRY(NonPeriodicTaskConfigList);
-    while (pxItem != listGET_END_MARKER(NonPeriodicTaskConfigList))
-    {
-        vProcessus *obj = (vProcessus *) listGET_LIST_ITEM_OWNER(pxItem);
+void vListProcLaunchPerioc(List_t *PeriodicTaskConfigList)
+{
+    ListItem_t *it = listGET_HEAD_ENTRY(PeriodicTaskConfigList);
 
-        // Do something with obj
-        // ...
-        // End
+    while (it != listGET_END_MARKER(PeriodicTaskConfigList)) {
+        vProcessus *p = listGET_LIST_ITEM_OWNER(it);
 
-        pxItem = pxItem->pxNext;  // move to next item
+        p->release_sem = xSemaphoreCreateBinary();
+
+        xTaskCreate(vTaskPeriodicWrapper,
+                    p->name,
+                    512,
+                    p,
+                    p->priority,
+                    &p->handle);
+
+        vTaskSuspend(p->handle);
+        it = it->pxNext;
     }
+}
+
+void vListProcLaunchNonPerioc(List_t *NonPeriodicTaskConfigList)
+{
+    ListItem_t *it = listGET_HEAD_ENTRY(NonPeriodicTaskConfigList);
+
+    while (it != listGET_END_MARKER(NonPeriodicTaskConfigList)) {
+        vProcessus *p = listGET_LIST_ITEM_OWNER(it);
+
+        xTaskCreate(p->function,
+                    p->name,
+                    512,
+                    p->arg,
+                    p->priority,
+                    &p->handle);
+
+        it = it->pxNext;
+    }
+}
+
+/* -------- SCHEDULER EXTENSION -------- */
+
+static void vHandleOverrun(vProcessus *p, TickType_t now)
+{
+    switch (p->overrun_policy) {
+
+    case POLICY_SKIP:
+        p->last_release += p->period;
+        break;
+
+    case POLICY_KILL:
+        vTaskSuspend(p->handle);
+        p->state = JOB_IDLE;
+        /* fallthrough */
+
+    case POLICY_CATCH_UP:
+        p->job_id++;
+        p->last_release = now;
+        p->abs_deadline = now + p->deadline;
+        xSemaphoreGive(p->release_sem);
+        vTaskResume(p->handle);
+        break;
+    }
+}
+
+static void vPeriodicReleaseManager(void *arg)
+{
+    List_t *list = (List_t *)arg;
+
+    for (;;) {
+        TickType_t now = xTaskGetTickCount();
+        ListItem_t *it = listGET_HEAD_ENTRY(list);
+
+        while (it != listGET_END_MARKER(list)) {
+            vProcessus *p = listGET_LIST_ITEM_OWNER(it);
+
+            if ((now - p->last_release) >= p->period) {
+                if (p->state == JOB_RUNNING) {
+                    vHandleOverrun(p, now);
+                } else {
+                    p->job_id++;
+                    p->last_release = now;
+                    p->abs_deadline = now + p->deadline;
+                    xSemaphoreGive(p->release_sem);
+                    vTaskResume(p->handle);
+                }
+            }
+            it = it->pxNext;
+        }
+        vTaskDelay(1);
+    }
+}
+
+
+/* -------- LAUNCH SCHEDULER EXTENSION -------- */
+
+
+void vStartPeriodicScheduler(List_t *PeriodicTaskConfigList)
+{
+    xTaskCreate(vPeriodicReleaseManager,
+                "PTL_MGR",
+                512,
+                PeriodicTaskConfigList,
+                configMAX_PRIORITIES - 1,
+                NULL);
 }
