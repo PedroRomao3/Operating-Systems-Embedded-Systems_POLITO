@@ -84,10 +84,12 @@ static void vTaskPeriodicWrapper(void *arg)
 
     for (;;) {
         xSemaphoreTake(p->release_sem, portMAX_DELAY);
-
+        SdkLog(("[ %d ] %s start \n", xTaskGetTickCount(), p->name));
+        
         p->state = JOB_RUNNING;
         p->function(p->arg);
         p->state = JOB_IDLE;
+        SdkLog(("[ %d ] %s complete\n", xTaskGetTickCount(), p->name));
     }
 }
 
@@ -139,15 +141,18 @@ static void vHandleOverrun(vProcessus *p, TickType_t now)
     switch (p->overrun_policy) {
 
     case POLICY_SKIP:
+        SdkLog( ( "[ %d ] %s Deadline miss -> skipped \n", now, p->name ));
         p->last_release += p->period;
         break;
 
     case POLICY_KILL:
+        SdkLog( ( "[ %d ] %s Deadline miss -> suspended \n", now, p->name ));
         vTaskSuspend(p->handle);
         p->state = JOB_IDLE;
         /* fallthrough */
 
     case POLICY_CATCH_UP:
+        SdkLog( ( "[ %d ] %s Deadline miss -> catch up \n", now, p->name ));
         p->job_id++;
         p->last_release = now;
         p->abs_deadline = now + p->deadline;
@@ -165,13 +170,19 @@ static void vPeriodicReleaseManager(void *arg)
         TickType_t now = xTaskGetTickCount();
         ListItem_t *it = listGET_HEAD_ENTRY(list);
 
+        vProcessus* p_cur = listGET_LIST_ITEM_OWNER(it);
+
         while (it != listGET_END_MARKER(list)) {
             vProcessus *p = listGET_LIST_ITEM_OWNER(it);
-
+            
             if ((now - p->last_release) >= p->period) {
+                /*  Task has exceeded deadline : deciding appropriate
+                    response depending on policy */
                 if (p->state == JOB_RUNNING) {
                     vHandleOverrun(p, now);
                 } else {
+                    ReleaseLog(p_cur->name, p->name, now);
+
                     p->job_id++;
                     p->last_release = now;
                     p->abs_deadline = now + p->deadline;
