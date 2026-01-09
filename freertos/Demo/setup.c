@@ -1,9 +1,9 @@
 #include "setup.h"
 
+#include "FreeRTOSConfig.h"
+
 // strncpy
 #include <string.h>
-#include <stdio.h>
-#include "uart.h"
 
 static uint32_t pid_counter = 0;
 
@@ -215,7 +215,7 @@ static void vPeriodicReleaseManager(void *arg)
             it = it->pxNext;
         }
         // NOTE: vTaskDelayUntill here should be more precise and reduces cpu jitter that could be caused by vTaskDelay
-        vTaskDelayUntil(&ptlFirstWakeTime, 1);
+        vTaskDelayUntil(&ptlFirstWakeTime, configPERIODIC_MANAGER_DELAY_TICKS);
     }
 }
 
