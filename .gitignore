@@ -1,4 +1,5 @@
 # Starting .gitignore file for now
+*.vscode
 *.o
 *.d
 *.elf

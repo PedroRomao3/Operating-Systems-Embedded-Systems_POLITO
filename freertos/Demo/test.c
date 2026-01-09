@@ -1,19 +1,27 @@
 #include "test.h"
 
+#include "uart.h"
+
 static void TaskA(void *arg)
 {
+    (void)arg;
+
     UART_printf("A");
     vTaskDelay(pdMS_TO_TICKS(5));
 }
 
 static void TaskB(void *arg)
 {
+    (void)arg;
+
     UART_printf("B");
     vTaskDelay(pdMS_TO_TICKS(18));
 }
 
 static void TaskC(void *arg)
 {
+    (void)arg;
+    
     for (;;) {
         UART_printf("C");
         vTaskDelay(pdMS_TO_TICKS(100));

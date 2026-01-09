@@ -1,5 +1,8 @@
 #include "setup.h"
 
+// strncpy
+#include <string.h>
+
 static uint32_t pid_counter = 0;
 
 /* -------- INITIALISATION -------- */

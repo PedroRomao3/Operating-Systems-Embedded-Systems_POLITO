@@ -1172,7 +1172,7 @@
     #endif /* if ( INCLUDE_uxTaskGetStackHighWaterMark2 == 1 ) */
 /*-----------------------------------------------------------*/
 
-    #if ( ( INCLUDE_xTaskGetCurrentTaskHandle == 1 ) || ( configUSE_MUTEXES == 1 ) )
+    #if ( ( INCLUDE_xTaskGetCurrentTaskHandle == 1 ) || ( configUSE_RECURSIVE_MUTEXES == 1 ) )
 
         TaskHandle_t MPU_xTaskGetCurrentTaskHandleImpl( void ) PRIVILEGED_FUNCTION;
 
@@ -1197,7 +1197,7 @@
             return xExternalTaskHandle;
         }
 
-    #endif /* if ( ( INCLUDE_xTaskGetCurrentTaskHandle == 1 ) || ( configUSE_MUTEXES == 1 ) ) */
+    #endif /* if ( ( INCLUDE_xTaskGetCurrentTaskHandle == 1 ) || ( configUSE_RECURSIVE_MUTEXES == 1 ) ) */
 /*-----------------------------------------------------------*/
 
     #if ( INCLUDE_xTaskGetSchedulerState == 1 )
@@ -3838,27 +3838,16 @@
             BaseType_t xReturn = pdFALSE;
             TimerHandle_t xInternalTimerHandle = NULL;
             int32_t lIndex;
-            BaseType_t xIsHigherPriorityTaskWokenWriteable = pdFALSE;
 
-            if( pxHigherPriorityTaskWoken != NULL )
+            lIndex = ( int32_t ) xTimer;
+
+            if( IS_EXTERNAL_INDEX_VALID( lIndex ) != pdFALSE )
             {
-                xIsHigherPriorityTaskWokenWriteable = xPortIsAuthorizedToAccessBuffer( pxHigherPriorityTaskWoken,
-                                                                                       sizeof( BaseType_t ),
-                                                                                       tskMPU_WRITE_PERMISSION );
-            }
+                xInternalTimerHandle = MPU_GetTimerHandleAtIndex( CONVERT_TO_INTERNAL_INDEX( lIndex ) );
 
-            if( ( pxHigherPriorityTaskWoken == NULL ) || ( xIsHigherPriorityTaskWokenWriteable == pdTRUE ) )
-            {
-                lIndex = ( int32_t ) xTimer;
-
-                if( IS_EXTERNAL_INDEX_VALID( lIndex ) != pdFALSE )
+                if( xInternalTimerHandle != NULL )
                 {
-                    xInternalTimerHandle = MPU_GetTimerHandleAtIndex( CONVERT_TO_INTERNAL_INDEX( lIndex ) );
-
-                    if( xInternalTimerHandle != NULL )
-                    {
-                        xReturn = xTimerGenericCommandFromISR( xInternalTimerHandle, xCommandID, xOptionalValue, pxHigherPriorityTaskWoken, xTicksToWait );
-                    }
+                    xReturn = xTimerGenericCommandFromISR( xInternalTimerHandle, xCommandID, xOptionalValue, pxHigherPriorityTaskWoken, xTicksToWait );
                 }
             }
 

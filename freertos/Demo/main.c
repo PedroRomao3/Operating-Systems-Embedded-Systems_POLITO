@@ -4,6 +4,7 @@
 #include "test.h"
 #include "uart.h"
 #include "list.h"
+
 #include <stdio.h>
 
 /* Global task lists */
@@ -36,11 +37,3 @@ int main(void)
 
     for (;;);
 }
-
-
-#include "FreeRTOS.h"
-#include "task.h"
-#include "setup.h"
-#include "test.h"
-#include "uart.h"
-#include <stdio.h>
