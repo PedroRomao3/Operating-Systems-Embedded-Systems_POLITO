@@ -2,6 +2,8 @@
 
 // strncpy
 #include <string.h>
+#include <stdio.h>
+#include "uart.h"
 
 static uint32_t pid_counter = 0;
 
@@ -15,6 +17,30 @@ void vTaskProcessusInit(List_t *periodic, List_t *nonperiodic)
 
 /* -------- CREATION -------- */
 
+/*
+ * Here we set the last_release time to be under 0 because:
+ * On startup:
+ *  -> We Create periodic tasks then suspend them => When scheduler start the periodic tasks are seen as BLOCKED
+ *  -> Non periodic tasks are not suspended on creation => scheduler sees them as READY
+ *  -> -> For the scheduler, READY > prio (since FreeRTOS runs READY tasks even if their Prio is lower)
+ * 
+ * When the Scheduler Runs:
+ *  -> PTL manager runs first (vPeriodicReleaseManager) since it has highest priority
+ *  -> It DOES NOT RELEASE any semaphores
+ *  -> -> This happens because:
+ *  -> -> -> In vPeriodicReleaseManager we have:
+ *  -> -> -> -> *if ((now - p->last_release) >= p->period)*
+ *  -> -> -> And when we create a periodic we used to set p->last_release to 0
+ *  -> -> -> -> That means when we run the scheduler that condition will ALWAYS fail the first iteration since xTaskGetTickCount will be 0 or 1
+ * 
+ *  -> At the end of first iteration scheduler delays for n ticks which means it blocks the highest priority PTL Manager task.
+ *  -> -> This means now we can run the non periodic task.
+ *  -> -> since no semaphores were released on the first iteration thats why the NON-PERIODIC task appears to run first.
+ * 
+ * By setting p->last_release to something < 0:
+ *  -> now the condition: *if ((now - p->last_release) >= p->period)* will succeed even at the first iteration and the last_release time will be updated
+ *  -> That means the semaphores are freed and that means the periodic task runs first
+ */
 vProcessus* vTaskProcessusCreate(const char *name,
                                  TaskFunction_t function,
                                  void *arg,
@@ -40,7 +66,8 @@ vProcessus* vTaskProcessusCreate(const char *name,
     p->overrun_policy = policy;
 
     p->state = JOB_IDLE;
-    p->last_release = 0;
+    // NOTE: Same as p->last_release = -p->period since xTaskGetTickCount() here should return 0 or 1
+    p->last_release = xTaskGetTickCount() - p->period;
     p->job_id = 0;
 
     vListInitialiseItem(&p->listItem);
@@ -148,6 +175,7 @@ static void vHandleOverrun(vProcessus *p, TickType_t now)
     case POLICY_KILL:
         vTaskSuspend(p->handle);
         p->state = JOB_IDLE;
+        // TODO: Shouldnt we break here?
         /* fallthrough */
 
     case POLICY_CATCH_UP:
@@ -163,6 +191,8 @@ static void vHandleOverrun(vProcessus *p, TickType_t now)
 static void vPeriodicReleaseManager(void *arg)
 {
     List_t *list = (List_t *)arg;
+
+    TickType_t ptlFirstWakeTime = xTaskGetTickCount();
 
     for (;;) {
         TickType_t now = xTaskGetTickCount();
@@ -184,7 +214,8 @@ static void vPeriodicReleaseManager(void *arg)
             }
             it = it->pxNext;
         }
-        vTaskDelay(1);
+        // NOTE: vTaskDelayUntill here should be more precise and reduces cpu jitter that could be caused by vTaskDelay
+        vTaskDelayUntil(&ptlFirstWakeTime, 1);
     }
 }
 

@@ -60,7 +60,7 @@ typedef struct vProcessus {
 
     /* Runtime state */
     TaskHandle_t handle;                  /**< FreeRTOS task handle */
-    TickType_t last_release;              /**< Last release time */
+    int last_release;                     /**< Last release time, set to int for setting last_release to something < 0 on startup */
     TickType_t abs_deadline;              /**< Absolute deadline */
     uint32_t job_id;                      /**< Job counter */
     job_state_t state;                    /**< Job state */
