@@ -1,5 +1,9 @@
 # Starting .gitignore file for now
-*.vscode
+
+# Remove the .vscode file
+.vscode/
+
+# Remove files created by compilation stages
 *.o
 *.d
 *.elf
