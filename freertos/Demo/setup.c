@@ -175,8 +175,7 @@ static void vHandleOverrun(vProcessus *p, TickType_t now)
     case POLICY_KILL:
         vTaskSuspend(p->handle);
         p->state = JOB_IDLE;
-        // TODO: Shouldnt we break here?
-        /* fallthrough */
+        break;
 
     case POLICY_CATCH_UP:
         p->job_id++;
