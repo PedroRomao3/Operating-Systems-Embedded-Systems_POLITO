@@ -1,49 +1,77 @@
 #include "test.h"
-
 #include "uart.h"
+#include "setup.h"
 
-static void TaskA(void *arg)
+
+#define TEST_CASE 5
+
+static void vBurnCPU(TickType_t ticks_to_wait)
 {
-    (void)arg;
-
-    // UART_printf("A\n");
-    vTaskDelay(pdMS_TO_TICKS(5));
-}
-
-static void TaskB(void *arg)
-{
-    (void)arg;
-
-    // UART_printf("B\n");
-    vTaskDelay(pdMS_TO_TICKS(18));
-}
-
-static void TaskC(void *arg)
-{
-    (void)arg;
-    
-    for (;;) {
-        // UART_printf("C");
-        vTaskDelay(pdMS_TO_TICKS(100));
+    TickType_t start = xTaskGetTickCount();
+    while ((xTaskGetTickCount() - start) < ticks_to_wait) {
+        __asm("nop"); 
     }
-    vTaskDelay(pdMS_TO_TICKS(100));
 }
 
-void vCreateTestTasks(List_t *Periodic, List_t *NonPeriodic){
+static void TaskGeneric(void *arg)
+{
+    TickType_t duration = (TickType_t)arg;
+    vBurnCPU(duration);
+}
+
+void vCreateTestTasks(List_t *Periodic, List_t *NonPeriodic)
+{
     
-    vCreateAndAddTask("TaskA", TaskA, NULL, 3, true, true,
-                      pdMS_TO_TICKS(100), pdMS_TO_TICKS(100),
-                      POLICY_SKIP,
-                      Periodic, NonPeriodic);
+    #if TEST_CASE == 1
+    UART_printf("\n[TEST 1] Single Periodic Task\n");
+    // TaskA: T=10ms, D=10ms, Cost=2ms
+    vCreateAndAddTask("TaskA", TaskGeneric, (void*)pdMS_TO_TICKS(2), 1, 
+                      true, pdMS_TO_TICKS(10), pdMS_TO_TICKS(10), 
+                      POLICY_SKIP, true, Periodic, NonPeriodic);
+    #endif
 
-    vCreateAndAddTask("TaskB", TaskB, NULL, 2, true, true,
-                      pdMS_TO_TICKS(200), pdMS_TO_TICKS(200),
-                      POLICY_KILL,
-                      Periodic, NonPeriodic);
+    #if TEST_CASE == 2
+    UART_printf("\n[TEST 2] Round Robin (Same Priority)\n");
+    // TaskA: Prio 1, Cost 2ms
+    vCreateAndAddTask("TaskA", TaskGeneric, (void*)pdMS_TO_TICKS(2), 1, 
+                      true, pdMS_TO_TICKS(10), pdMS_TO_TICKS(10), 
+                      POLICY_SKIP, true, Periodic, NonPeriodic);
+    // TaskB: Prio 1, Cost 2ms
+    vCreateAndAddTask("TaskB", TaskGeneric, (void*)pdMS_TO_TICKS(2), 1, 
+                      true, pdMS_TO_TICKS(10), pdMS_TO_TICKS(10), 
+                      POLICY_SKIP, true, Periodic, NonPeriodic);
+    #endif
 
-    vCreateAndAddTask("TaskC", TaskC, NULL, 1, false, true,
-                      0, 0,
-                      POLICY_SKIP,
-                      Periodic, NonPeriodic);
+    #if TEST_CASE == 3
+    UART_printf("\n[TEST 3] Preemption\n");
+    // TaskA (High): Prio 3, Cost 2ms
+    vCreateAndAddTask("TaskA", TaskGeneric, (void*)pdMS_TO_TICKS(2), 3, 
+                      true, pdMS_TO_TICKS(10), pdMS_TO_TICKS(10), 
+                      POLICY_SKIP, true, Periodic, NonPeriodic);
+    // TaskB (Low): Prio 1, Cost 2ms
+    vCreateAndAddTask("TaskB", TaskGeneric, (void*)pdMS_TO_TICKS(2), 1, 
+                      true, pdMS_TO_TICKS(10), pdMS_TO_TICKS(10), 
+                      POLICY_SKIP, true, Periodic, NonPeriodic);
+    #endif
+
+    #if TEST_CASE == 4
+    UART_printf("\n[TEST 4] Rate Monotonic\n");
+    // TaskA (Fast): T=10ms, Prio 3
+    vCreateAndAddTask("TaskA", TaskGeneric, (void*)pdMS_TO_TICKS(2), 3, 
+                      true, pdMS_TO_TICKS(10), pdMS_TO_TICKS(10), 
+                      POLICY_SKIP, true, Periodic, NonPeriodic);
+    // TaskB (Slow): T=15ms, Prio 1
+    vCreateAndAddTask("TaskB", TaskGeneric, (void*)pdMS_TO_TICKS(2), 1, 
+                      true, pdMS_TO_TICKS(15), pdMS_TO_TICKS(15), 
+                      POLICY_SKIP, true, Periodic, NonPeriodic);
+    #endif
+
+    
+    #if TEST_CASE == 5
+    UART_printf("\n[TEST 5] Deadline Miss (Not Overrun)\n");
+    // TaskMiss: T=20ms, D=10ms, Cost=15ms
+    vCreateAndAddTask("TaskMiss", TaskGeneric, (void*)pdMS_TO_TICKS(15), 1, 
+                      true, pdMS_TO_TICKS(20), pdMS_TO_TICKS(10), 
+                      POLICY_SKIP, true, Periodic, NonPeriodic);
+    #endif
 }
-
