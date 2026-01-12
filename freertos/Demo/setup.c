@@ -41,7 +41,7 @@ void vTaskListsInitialize(List_t *periodic, List_t *nonperiodic)
  *  -> now the condition: *if ((now - p->last_release) >= p->period)* will succeed even at the first iteration and the last_release time will be updated
  *  -> That means the semaphores are freed and that means the periodic task runs first
  */
-vTaskDescription_t* vTaskProcessesCreate(const char *name,
+TaskDescription_t* vTaskProcessesCreate(const char *name,
                                  TaskFunction_t function,
                                  void *arg,
                                  UBaseType_t priority,
@@ -51,7 +51,7 @@ vTaskDescription_t* vTaskProcessesCreate(const char *name,
                                  TickType_t deadline,
                                  overrun_policy_t policy)
 {
-    vTaskDescription_t *p = pvPortMalloc(sizeof(vTaskDescription_t));
+    TaskDescription_t *p = pvPortMalloc(sizeof(TaskDescription_t));
 
     p->pid = pid_counter++;
     strncpy(p->name, name, MAXIMUM_NAME_SIZE);
@@ -80,7 +80,7 @@ vTaskDescription_t* vTaskProcessesCreate(const char *name,
 
 /* -------- LIST MANAGEMENT -------- */
 
-void TaskConfigListPNP_Add(vTaskDescription_t *process, List_t *PeriodList, List_t *NonPeriodList)
+void TaskConfigListPNP_Add(TaskDescription_t *process, List_t *PeriodList, List_t *NonPeriodList)
 {
     vListInsertEnd((process->type == PTask)
                     ? PeriodList
@@ -89,7 +89,7 @@ void TaskConfigListPNP_Add(vTaskDescription_t *process, List_t *PeriodList, List
 }
 
 
-vTaskDescription_t* vCreateAndAddTask(const char *name,
+TaskDescription_t* vCreateAndAddTask(const char *name,
                               TaskFunction_t function,
                               void *arg,
                               UBaseType_t priority,
@@ -101,7 +101,7 @@ vTaskDescription_t* vCreateAndAddTask(const char *name,
                               List_t *PeriodList,
                               List_t *NonPeriodList)
 {
-    vTaskDescription_t *p = vTaskProcessesCreate(name, function, arg,
+    TaskDescription_t *p = vTaskProcessesCreate(name, function, arg,
                                          priority, stack_size, is_periodic,
                                          period, deadline, policy);
 
@@ -113,7 +113,7 @@ vTaskDescription_t* vCreateAndAddTask(const char *name,
 
 static void vTaskPeriodicWrapper(void *arg)
 {
-    vTaskDescription_t *p = (vTaskDescription_t*)arg;
+    TaskDescription_t *p = (TaskDescription_t*)arg;
 
     for (;;) {
         xSemaphoreTake(p->release_sem, portMAX_DELAY);
@@ -131,7 +131,7 @@ void vListProcLaunchPeriodic(List_t *PeriodicTaskConfigList)
     ListItem_t *it = listGET_HEAD_ENTRY(PeriodicTaskConfigList);
 
     while (it != listGET_END_MARKER(PeriodicTaskConfigList)) {
-        vTaskDescription_t *p = listGET_LIST_ITEM_OWNER(it);
+        TaskDescription_t *p = listGET_LIST_ITEM_OWNER(it);
 
         p->release_sem = xSemaphoreCreateBinary();
 
@@ -152,7 +152,7 @@ void vListProcLaunchNonPeriodic(List_t *NonPeriodicTaskConfigList)
     ListItem_t *it = listGET_HEAD_ENTRY(NonPeriodicTaskConfigList);
 
     while (it != listGET_END_MARKER(NonPeriodicTaskConfigList)) {
-        vTaskDescription_t *p = listGET_LIST_ITEM_OWNER(it);
+        TaskDescription_t *p = listGET_LIST_ITEM_OWNER(it);
 
         xTaskCreate(p->function,
                     p->name,
@@ -167,7 +167,7 @@ void vListProcLaunchNonPeriodic(List_t *NonPeriodicTaskConfigList)
 
 /* -------- SCHEDULER EXTENSION -------- */
 
-static void vHandleOverrun(vTaskDescription_t *p, TickType_t now)
+static void vHandleOverrun(TaskDescription_t *p, TickType_t now)
 {
     switch (p->overrun_policy) {
         case POLICY_NONE:
@@ -204,7 +204,7 @@ static void vPeriodicReleaseManager(void *arg)
         ListItem_t *it = listGET_HEAD_ENTRY(list);
 
         while (it != listGET_END_MARKER(list)) {
-            vTaskDescription_t *p = listGET_LIST_ITEM_OWNER(it);
+            TaskDescription_t *p = listGET_LIST_ITEM_OWNER(it);
 
             if ((now - p->last_release) >= p->period) {
                 if (p->state == JOB_RUNNING) {

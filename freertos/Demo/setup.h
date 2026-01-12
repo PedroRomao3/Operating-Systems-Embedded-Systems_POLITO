@@ -46,7 +46,7 @@ typedef enum {
  * This structure describes both configuration and runtime state
  * of a periodic or non-periodic task managed by the PTL.
  */
-typedef struct vTaskDescription_s {
+typedef struct TaskDescription_s {
     uint32_t pid;                         /**< Task identifier */
     char name[MAXIMUM_NAME_SIZE];         /**< Task name */
     TaskFunction_t function;              /**< User job function */
@@ -69,7 +69,7 @@ typedef struct vTaskDescription_s {
 
     SemaphoreHandle_t release_sem;        /**< Release semaphore */
     ListItem_t listItem;                  /**< List linkage */
-} vTaskDescription_t;
+} TaskDescription_t;
 
 /**
  * @brief Initialise periodic and non-periodic task lists.
@@ -90,7 +90,7 @@ void vTaskListsInitialize(List_t *periodic, List_t *nonperiodic);
  *
  * @return Pointer to created vTaskDescription_t
  */
-vTaskDescription_t* vTaskProcessesCreate(const char *name,
+TaskDescription_t* vTaskProcessesCreate(const char *name,
                                  TaskFunction_t function,
                                  void *arg,
                                  UBaseType_t priority,
@@ -103,7 +103,7 @@ vTaskDescription_t* vTaskProcessesCreate(const char *name,
 /**
  * @brief Insert a task into the appropriate configuration list.
  */
-void TaskConfigListPNP_Add(vTaskDescription_t *process,
+void TaskConfigListPNP_Add(TaskDescription_t *process,
                            List_t *PeriodList,
                            List_t *NonPeriodList);
 
@@ -125,7 +125,7 @@ void TaskConfigListPNP_Add(vTaskDescription_t *process,
  *
  * @return pointeur vers la vTaskDescription_t créée
  */
-vTaskDescription_t* vCreateAndAddTask(const char *name,
+TaskDescription_t* vCreateAndAddTask(const char *name,
                               TaskFunction_t function,
                               void *arg,
                               UBaseType_t priority,
