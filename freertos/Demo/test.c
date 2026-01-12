@@ -1,48 +1,43 @@
 #include "test.h"
 
-#include "uart.h"
-
-static void TaskA(void *arg)
+bool InitTesting(SchedulerConfig_t* testConfiguration, List_t* periodicTaskConfigList, List_t* nonPeriodicTaskConfigList)
 {
-    (void)arg;
+    // TODO(Reda): Maybe trace here anywhere there is a possibile failing spot
+    if (testConfiguration == NULL)
+        return false;
 
-    UART_printf("A");
-    vTaskDelay(pdMS_TO_TICKS(5));
-}
+    if (testConfiguration->num_tasks > 0 && testConfiguration->tasks == NULL)
+        return false;
 
-static void TaskB(void *arg)
-{
-    (void)arg;
+    for (uint32_t i = 0; i < testConfiguration->num_tasks; i++)
+    {
+        TaskConfiguration_t currentTask = testConfiguration->tasks[i];
 
-    UART_printf("B");
-    vTaskDelay(pdMS_TO_TICKS(18));
-}
+        if (currentTask.func == NULL)
+            return false; // Since we have a task without a task function
 
-static void TaskC(void *arg)
-{
-    (void)arg;
-    
-    for (;;) {
-        UART_printf("C");
-        vTaskDelay(pdMS_TO_TICKS(100));
+        // TODO(Reda): Add some logging here? Set default stack_size if user forgot to specify and auto initialization sets it to 0
+        if (currentTask.stack_size == 0)
+            currentTask.stack_size = 512;
+
+        // If the task config has an explicit policy then we use that otherwise just use the global scheduler policy
+        overrun_policy_t policyToUse = testConfiguration->policy;
+        if (currentTask.policy_override != POLICY_NONE)
+            policyToUse = currentTask.policy_override;        
+
+        vCreateAndAddTask(
+            currentTask.name,
+            currentTask.func,
+            currentTask.arg,
+            currentTask.priority,
+            currentTask.stack_size,
+            ((currentTask.deadline == 0) && (currentTask.period == 0)) ? false : true,
+            pdMS_TO_TICKS(currentTask.period),
+            pdMS_TO_TICKS(currentTask.deadline),
+            policyToUse,
+            periodicTaskConfigList, nonPeriodicTaskConfigList
+        );
     }
+
+    return true;
 }
-
-void vCreateTestTasks(List_t *Periodic, List_t *NonPeriodic){
-    
-    vCreateAndAddTask("TaskA", TaskA, NULL, 3, true,
-                      pdMS_TO_TICKS(10), pdMS_TO_TICKS(10),
-                      POLICY_SKIP,
-                      Periodic, NonPeriodic);
-
-    vCreateAndAddTask("TaskB", TaskB, NULL, 2, true,
-                      pdMS_TO_TICKS(20), pdMS_TO_TICKS(15),
-                      POLICY_KILL,
-                      Periodic, NonPeriodic);
-
-    vCreateAndAddTask("TaskC", TaskC, NULL, 1, false,
-                      0, 0,
-                      POLICY_SKIP,
-                      Periodic, NonPeriodic);
-}
-
