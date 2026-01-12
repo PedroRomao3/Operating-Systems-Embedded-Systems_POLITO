@@ -132,4 +132,12 @@
 
 #define configENABLE_BACKWARD_COMPATIBILITY 0
 
+#ifndef LIBRARY_LOG_NAME
+    #define LIBRARY_LOG_NAME    "PERIODIC_SCHEDULER"
+#endif
+
+#ifndef LIBRARY_LOG_LEVEL
+    #define LIBRARY_LOG_LEVEL    LOG_INFO
+#endif
+
 #endif /* FREERTOS_CONFIG_H */

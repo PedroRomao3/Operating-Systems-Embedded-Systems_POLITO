@@ -61,6 +61,8 @@ SOURCE_FILES += $(DEMO_PROJECT)/setup.c
 SOURCE_FILES += $(DEMO_PROJECT)/test.c
 SOURCE_FILES += $(DEMO_PROJECT)/uart.c
 
+# Utilities (logging) source files
+SOURCE_FILES += $(DEMO_PROJECT)/logging.c
 
 # Start-up code
 SOURCE_FILES += ./startup.c

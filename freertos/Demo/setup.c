@@ -48,7 +48,8 @@ vProcessus* vTaskProcessusCreate(const char *name,
                                  bool is_periodic,
                                  TickType_t period,
                                  TickType_t deadline,
-                                 overrun_policy_t policy)
+                                 overrun_policy_t policy,
+                                 bool trace_enabled)
 {
     vProcessus *p = pvPortMalloc(sizeof(vProcessus));
 
@@ -64,6 +65,7 @@ vProcessus* vTaskProcessusCreate(const char *name,
     p->period = period;
     p->deadline = (deadline == 0) ? period : deadline;
     p->overrun_policy = policy;
+    p->trace_enabled = trace_enabled;
 
     p->state = JOB_IDLE;
     // NOTE: Same as p->last_release = -p->period since xTaskGetTickCount() here should return 0 or 1
@@ -92,6 +94,7 @@ vProcessus* vCreateAndAddTask(const char *name,
                               void *arg,
                               UBaseType_t priority,
                               bool is_periodic,
+                              bool trace_enabled,
                               TickType_t period,
                               TickType_t deadline,
                               overrun_policy_t policy,
@@ -100,7 +103,7 @@ vProcessus* vCreateAndAddTask(const char *name,
 {
     vProcessus *p = vTaskProcessusCreate(name, function, arg,
                                          priority, is_periodic,
-                                         period, deadline, policy);
+                                         period, deadline, policy, trace_enabled);
 
     TaskConfigListPNP_Add(p, PeriodList, NonPeriodList);
     return p;
@@ -114,10 +117,18 @@ static void vTaskPeriodicWrapper(void *arg)
 
     for (;;) {
         xSemaphoreTake(p->release_sem, portMAX_DELAY);
-
+        SdkLog(("[ %d ] %s start \n", xTaskGetTickCount(), p->name));
+        
         p->state = JOB_RUNNING;
         p->function(p->arg);
+        //TODO: delete this comment later, we didnt have dealine checks on period overrun
+        TickType_t now = xTaskGetTickCount();
+        if (now > p->abs_deadline) {
+            SdkLog(("[ %d ] %s DEADLINE MISS \n", now, p->name));
+        }
+
         p->state = JOB_IDLE;
+        SdkLog(("[ %d ] %s complete\n", xTaskGetTickCount(), p->name));
     }
 }
 
@@ -166,6 +177,7 @@ void vListProcLaunchNonPerioc(List_t *NonPeriodicTaskConfigList)
 
 static void vHandleOverrun(vProcessus *p, TickType_t now)
 {
+    SdkLog( ( "[ %d ] %s PERIOD OVERRUN -> Policy %d \n", now, p->name, p->overrun_policy ));
     switch (p->overrun_policy) {
 
     case POLICY_SKIP:
@@ -173,9 +185,18 @@ static void vHandleOverrun(vProcessus *p, TickType_t now)
         break;
 
     case POLICY_KILL:
-        vTaskSuspend(p->handle);
+        vTaskDelete(p->handle);
+
+        xTaskCreate(vTaskPeriodicWrapper,
+                    p->name,
+                    512, 
+                    p,
+                    p->priority,
+                    &p->handle);
+
         p->state = JOB_IDLE;
-        break;
+
+        //TODO: (delete comment later) fallthrough is what we want, since the teacher says to release immediatly
 
     case POLICY_CATCH_UP:
         p->job_id++;
@@ -197,13 +218,18 @@ static void vPeriodicReleaseManager(void *arg)
         TickType_t now = xTaskGetTickCount();
         ListItem_t *it = listGET_HEAD_ENTRY(list);
 
+
         while (it != listGET_END_MARKER(list)) {
             vProcessus *p = listGET_LIST_ITEM_OWNER(it);
-
+            
             if ((now - p->last_release) >= p->period) {
+                /*  Task has exceeded deadline : deciding appropriate
+                    response depending on policy */
                 if (p->state == JOB_RUNNING) {
                     vHandleOverrun(p, now);
                 } else {
+                    ReleaseLog("PTL_MGR", p->name, now);
+
                     p->job_id++;
                     p->last_release = now;
                     p->abs_deadline = now + p->deadline;

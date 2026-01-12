@@ -6,6 +6,8 @@
 #include "list.h"
 #include "semphr.h"
 #include <stdbool.h>
+#include "logging_stack.h"
+
 
 /**
  * @file setup.h
@@ -56,6 +58,7 @@ typedef struct vProcessus {
     /* Periodic parameters */
     TickType_t period;                    /**< Task period */
     TickType_t deadline;                  /**< Relative deadline */
+    bool trace_enabled;                   /**< allows disabling logs for some tests */
     overrun_policy_t overrun_policy;      /**< Overrun policy */
 
     /* Runtime state */
@@ -63,7 +66,7 @@ typedef struct vProcessus {
     int last_release;                     /**< Last release time, set to int for setting last_release to something < 0 on startup */
     TickType_t abs_deadline;              /**< Absolute deadline */
     uint32_t job_id;                      /**< Job counter */
-    job_state_t state;                    /**< Job state */
+    volatile job_state_t state;           /**< Job state, we need volatile to prevent strange behaviour ih edge cases */
 
     SemaphoreHandle_t release_sem;        /**< Release semaphore */
     ListItem_t listItem;                  /**< List linkage */
@@ -96,7 +99,8 @@ vProcessus* vTaskProcessusCreate(const char *name,
                                  bool is_periodic,
                                  TickType_t period,
                                  TickType_t deadline,
-                                 overrun_policy_t policy);
+                                 overrun_policy_t policy,
+                                 bool trace_enabled);
 
 /**
  * @brief Insert a task into the appropriate configuration list.
@@ -127,6 +131,7 @@ vProcessus* vCreateAndAddTask(const char *name,
                               void *arg,
                               UBaseType_t priority,
                               bool is_periodic,
+                              bool trace_enabled,
                               TickType_t period,
                               TickType_t deadline,
                               overrun_policy_t policy,
