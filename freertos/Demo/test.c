@@ -9,6 +9,9 @@ bool InitTesting(SchedulerConfig_t* testConfiguration, List_t* periodicTaskConfi
     if (testConfiguration->num_tasks > 0 && testConfiguration->tasks == NULL)
         return false;
 
+    if (testConfiguration->num_tasks > testConfiguration->max_tasks)
+        return false;
+
     for (uint32_t i = 0; i < testConfiguration->num_tasks; i++)
     {
         TaskConfiguration_t currentTask = testConfiguration->tasks[i];
