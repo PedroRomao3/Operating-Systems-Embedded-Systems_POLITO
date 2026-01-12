@@ -4,6 +4,8 @@
 
 // strncpy
 #include <string.h>
+//cool trick to clean up the logs
+#define TASK_LOG(p, msg_args)  do { if ((p)->trace_enabled) SdkLog(msg_args); } while(0)
 
 static uint32_t pid_counter = 0;
 
@@ -117,8 +119,7 @@ static void vTaskPeriodicWrapper(void *arg)
 
     for (;;) {
         xSemaphoreTake(p->release_sem, portMAX_DELAY);
-        SdkLog(("[ %d ] %s start \n", xTaskGetTickCount(), p->name));
-        
+        TASK_LOG(p, ("[ %d ] %s start \n", xTaskGetTickCount(), p->name));        
         p->state = JOB_RUNNING;
         p->function(p->arg);
         //TODO: delete this comment later, we didnt have dealine checks on period overrun
@@ -128,7 +129,7 @@ static void vTaskPeriodicWrapper(void *arg)
         }
 
         p->state = JOB_IDLE;
-        SdkLog(("[ %d ] %s complete\n", xTaskGetTickCount(), p->name));
+        TASK_LOG(p, ("[ %d ] %s complete\n", xTaskGetTickCount(), p->name));
     }
 }
 
@@ -221,7 +222,6 @@ static void vPeriodicReleaseManager(void *arg)
 
         while (it != listGET_END_MARKER(list)) {
             vProcessus *p = listGET_LIST_ITEM_OWNER(it);
-            
             if ((now - p->last_release) >= p->period) {
                 /*  Task has exceeded deadline : deciding appropriate
                     response depending on policy */
