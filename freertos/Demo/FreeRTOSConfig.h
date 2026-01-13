@@ -133,7 +133,8 @@
 #define configENABLE_BACKWARD_COMPATIBILITY 0
 
 #ifndef LIBRARY_LOG_NAME
-    #define LIBRARY_LOG_NAME    "PERIODIC_SCHEDULER"
+    #define LIBRARY_LOG_NAME                      "PERIODIC_SCHEDULER"
+    #define configLOG_BUFFER_SIZE                 256
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL

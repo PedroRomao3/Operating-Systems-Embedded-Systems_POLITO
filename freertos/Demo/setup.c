@@ -120,18 +120,18 @@ static void vTaskPeriodicWrapper(void *arg)
     for (;;)
     {
         xSemaphoreTake(p->release_sem, portMAX_DELAY);
-        TASK_LOG(p, ("[ %d ] %s start \n", xTaskGetTickCount(), p->name));
+        TASK_LOG(p, "[ %d ] %s start \n", xTaskGetTickCount(), p->name);
         p->state = JOB_RUNNING;
         p->function(p->arg);
         // TODO: delete this comment later, we didnt have dealine checks on period overrun
         TickType_t now = xTaskGetTickCount();
         if (now > p->abs_deadline)
         {
-            SdkLog(("[ %d ] %s DEADLINE MISS \n", now, p->name));
+            SdkLog("[ %d ] %s DEADLINE MISS \n", now, p->name);
         }
 
         p->state = JOB_IDLE;
-        TASK_LOG(p, ("[ %d ] %s complete\n", xTaskGetTickCount(), p->name));
+        TASK_LOG(p, "[ %d ] %s complete\n", xTaskGetTickCount(), p->name);
     }
 }
 
@@ -182,11 +182,11 @@ void vListProcLaunchNonPeriodic(List_t *NonPeriodicTaskConfigList)
 
 static void vHandleOverrun(TaskDescription_t *p, TickType_t now)
 {
-    SdkLog(("[ %d ] %s PERIOD OVERRUN -> Policy %d \n", now, p->name, p->overrun_policy));
+    SdkLog("[ %d ] %s PERIOD OVERRUN -> Policy %d \n", now, p->name, p->overrun_policy);
     switch (p->overrun_policy)
     {
     case POLICY_NONE:
-        // TODO(Reda): Maybe log something here like as error or maybe breakpoint since should never happen?
+        SdkLog("[ %d ] %s Task has POLICY_NONE which should not be allowed!\n", now, p->name);
         break;
     case POLICY_SKIP:
         p->last_release += p->period;
@@ -203,7 +203,7 @@ static void vHandleOverrun(TaskDescription_t *p, TickType_t now)
 
         p->state = JOB_IDLE;
 
-        // TODO: (delete comment later) fallthrough is what we want, since the teacher says to release immediatly
+        // NOTE: Here we want to fallthrough, since the teacher says to release immediatly
 
     case POLICY_CATCH_UP:
         p->job_id++;

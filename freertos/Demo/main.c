@@ -20,7 +20,6 @@ int main(void)
     vTaskListsInitialize(&PeriodicTaskConfigList, &NonPeriodicTaskConfigList);
 
     /* Create application tasks */
-
     UART_printf("2");
     vCreateTestTasks(&PeriodicTaskConfigList, &NonPeriodicTaskConfigList);
 
@@ -36,6 +35,5 @@ int main(void)
     /* Start FreeRTOS scheduler */
     vTaskStartScheduler();
 
-    for (;;)
-        ;
+    for (;;);
 }

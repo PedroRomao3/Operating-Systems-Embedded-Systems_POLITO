@@ -2,6 +2,7 @@
 #define TEST_H
 
 #include "setup.h"
+
 #define TRACE_ENABLED true
 
 typedef struct TaskConfiguration_s
@@ -42,5 +43,7 @@ typedef struct SchedulerConfig_s
  * @return true on proper test initialization, false otherwise
  */
 bool InitTesting(SchedulerConfig_t *testConfiguration, List_t *periodicTaskConfigList, List_t *nonPeriodicTaskConfigList);
+
+void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList);
 
 #endif

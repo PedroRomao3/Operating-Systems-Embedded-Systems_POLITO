@@ -16,11 +16,11 @@
 #define MAXIMUM_NAME_SIZE 16
 
 // cool trick to clean up the logs
-#define TASK_LOG(p, msg_args)   \
+#define TASK_LOG(p, ...)        \
     do                          \
     {                           \
         if ((p)->trace_enabled) \
-            SdkLog(msg_args);   \
+            SdkLog(__VA_ARGS__);\
     } while (0)
 
 /**
