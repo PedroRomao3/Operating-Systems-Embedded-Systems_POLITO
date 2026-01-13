@@ -11,20 +11,18 @@
 List_t PeriodicTaskConfigList;
 List_t NonPeriodicTaskConfigList;
 
-
-
 int main(void)
 {
     /* Initialise process lists */
     UART_init();
-    
+
     UART_printf("1");
     vTaskListsInitialize(&PeriodicTaskConfigList, &NonPeriodicTaskConfigList);
-    
+
     /* Create application tasks */
 
     UART_printf("2");
-    vCreateTestTasks(&PeriodicTaskConfigList, &NonPeriodicTaskConfigList);    
+    vCreateTestTasks(&PeriodicTaskConfigList, &NonPeriodicTaskConfigList);
 
     /* Create FreeRTOS tasks */
     UART_printf("3");
@@ -38,5 +36,6 @@ int main(void)
     /* Start FreeRTOS scheduler */
     vTaskStartScheduler();
 
-    for (;;);
+    for (;;)
+        ;
 }

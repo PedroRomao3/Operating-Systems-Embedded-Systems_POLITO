@@ -4,8 +4,6 @@
 
 // strncpy
 #include <string.h>
-//cool trick to clean up the logs
-#define TASK_LOG(p, msg_args)  do { if ((p)->trace_enabled) SdkLog(msg_args); } while(0)
 
 static uint32_t pid_counter = 0;
 
@@ -25,7 +23,7 @@ void vTaskListsInitialize(List_t *periodic, List_t *nonperiodic)
  *  -> We Create periodic tasks then suspend them => When scheduler start the periodic tasks are seen as BLOCKED
  *  -> Non periodic tasks are not suspended on creation => scheduler sees them as READY
  *  -> -> For the scheduler, READY > prio (since FreeRTOS runs READY tasks even if their Prio is lower)
- * 
+ *
  * When the Scheduler Runs:
  *  -> PTL manager runs first (vPeriodicReleaseManager) since it has highest priority
  *  -> It DOES NOT RELEASE any semaphores
@@ -34,25 +32,25 @@ void vTaskListsInitialize(List_t *periodic, List_t *nonperiodic)
  *  -> -> -> -> *if ((now - p->last_release) >= p->period)*
  *  -> -> -> And when we create a periodic we used to set p->last_release to 0
  *  -> -> -> -> That means when we run the scheduler that condition will ALWAYS fail the first iteration since xTaskGetTickCount will be 0 or 1
- * 
+ *
  *  -> At the end of first iteration scheduler delays for n ticks which means it blocks the highest priority PTL Manager task.
  *  -> -> This means now we can run the non periodic task.
  *  -> -> since no semaphores were released on the first iteration thats why the NON-PERIODIC task appears to run first.
- * 
+ *
  * By setting p->last_release to something < 0:
  *  -> now the condition: *if ((now - p->last_release) >= p->period)* will succeed even at the first iteration and the last_release time will be updated
  *  -> That means the semaphores are freed and that means the periodic task runs first
  */
-TaskDescription_t* vTaskProcessesCreate(const char *name,
-                                 TaskFunction_t function,
-                                 void *arg,
-                                 UBaseType_t priority,
-                                 StackType_t stack_size,
-                                 bool is_periodic,
-                                 TickType_t period,
-                                 TickType_t deadline,
-                                 overrun_policy_t policy,
-                                 bool trace_enabled)
+TaskDescription_t *vTaskProcessesCreate(const char *name,
+                                        TaskFunction_t function,
+                                        void *arg,
+                                        UBaseType_t priority,
+                                        StackType_t stack_size,
+                                        bool is_periodic,
+                                        TickType_t period,
+                                        TickType_t deadline,
+                                        overrun_policy_t policy,
+                                        bool trace_enabled)
 {
     TaskDescription_t *p = pvPortMalloc(sizeof(TaskDescription_t));
 
@@ -87,28 +85,27 @@ TaskDescription_t* vTaskProcessesCreate(const char *name,
 void TaskConfigListPNP_Add(TaskDescription_t *process, List_t *PeriodList, List_t *NonPeriodList)
 {
     vListInsertEnd((process->type == PTask)
-                    ? PeriodList
-                    : NonPeriodList,
+                       ? PeriodList
+                       : NonPeriodList,
                    &process->listItem);
 }
 
-
-TaskDescription_t* vCreateAndAddTask(const char *name,
-                              TaskFunction_t function,
-                              void *arg,
-                              UBaseType_t priority,
-                              StackType_t stack_size,
-                              bool is_periodic,
-                              bool trace_enabled,
-                              TickType_t period,
-                              TickType_t deadline,
-                              overrun_policy_t policy,
-                              List_t *PeriodList,
-                              List_t *NonPeriodList)
+TaskDescription_t *vCreateAndAddTask(const char *name,
+                                     TaskFunction_t function,
+                                     void *arg,
+                                     UBaseType_t priority,
+                                     StackType_t stack_size,
+                                     bool is_periodic,
+                                     bool trace_enabled,
+                                     TickType_t period,
+                                     TickType_t deadline,
+                                     overrun_policy_t policy,
+                                     List_t *PeriodList,
+                                     List_t *NonPeriodList)
 {
     TaskDescription_t *p = vTaskProcessesCreate(name, function, arg,
-                                         priority, stack_size, is_periodic,
-                                         period, deadline, policy, trace_enabled);
+                                                priority, stack_size, is_periodic,
+                                                period, deadline, policy, trace_enabled);
 
     TaskConfigListPNP_Add(p, PeriodList, NonPeriodList);
     return p;
@@ -118,16 +115,18 @@ TaskDescription_t* vCreateAndAddTask(const char *name,
 
 static void vTaskPeriodicWrapper(void *arg)
 {
-    TaskDescription_t *p = (TaskDescription_t*)arg;
+    TaskDescription_t *p = (TaskDescription_t *)arg;
 
-    for (;;) {
+    for (;;)
+    {
         xSemaphoreTake(p->release_sem, portMAX_DELAY);
-        TASK_LOG(p, ("[ %d ] %s start \n", xTaskGetTickCount(), p->name));        
+        TASK_LOG(p, ("[ %d ] %s start \n", xTaskGetTickCount(), p->name));
         p->state = JOB_RUNNING;
         p->function(p->arg);
-        //TODO: delete this comment later, we didnt have dealine checks on period overrun
+        // TODO: delete this comment later, we didnt have dealine checks on period overrun
         TickType_t now = xTaskGetTickCount();
-        if (now > p->abs_deadline) {
+        if (now > p->abs_deadline)
+        {
             SdkLog(("[ %d ] %s DEADLINE MISS \n", now, p->name));
         }
 
@@ -142,7 +141,8 @@ void vListProcLaunchPeriodic(List_t *PeriodicTaskConfigList)
 {
     ListItem_t *it = listGET_HEAD_ENTRY(PeriodicTaskConfigList);
 
-    while (it != listGET_END_MARKER(PeriodicTaskConfigList)) {
+    while (it != listGET_END_MARKER(PeriodicTaskConfigList))
+    {
         TaskDescription_t *p = listGET_LIST_ITEM_OWNER(it);
 
         p->release_sem = xSemaphoreCreateBinary();
@@ -163,7 +163,8 @@ void vListProcLaunchNonPeriodic(List_t *NonPeriodicTaskConfigList)
 {
     ListItem_t *it = listGET_HEAD_ENTRY(NonPeriodicTaskConfigList);
 
-    while (it != listGET_END_MARKER(NonPeriodicTaskConfigList)) {
+    while (it != listGET_END_MARKER(NonPeriodicTaskConfigList))
+    {
         TaskDescription_t *p = listGET_LIST_ITEM_OWNER(it);
 
         xTaskCreate(p->function,
@@ -181,35 +182,36 @@ void vListProcLaunchNonPeriodic(List_t *NonPeriodicTaskConfigList)
 
 static void vHandleOverrun(TaskDescription_t *p, TickType_t now)
 {
-    SdkLog( ( "[ %d ] %s PERIOD OVERRUN -> Policy %d \n", now, p->name, p->overrun_policy ));
-    switch (p->overrun_policy) {
-        case POLICY_NONE:
-            // TODO(Reda): Maybe log something here like as error or maybe breakpoint since should never happen?
-            break;
-        case POLICY_SKIP:
-            p->last_release += p->period;
-            break;
-        case POLICY_KILL:
-            vTaskDelete(p->handle);
+    SdkLog(("[ %d ] %s PERIOD OVERRUN -> Policy %d \n", now, p->name, p->overrun_policy));
+    switch (p->overrun_policy)
+    {
+    case POLICY_NONE:
+        // TODO(Reda): Maybe log something here like as error or maybe breakpoint since should never happen?
+        break;
+    case POLICY_SKIP:
+        p->last_release += p->period;
+        break;
+    case POLICY_KILL:
+        vTaskDelete(p->handle);
 
-            xTaskCreate(vTaskPeriodicWrapper,
-                        p->name,
-                        512, 
-                        p,
-                        p->priority,
-                        &p->handle);
+        xTaskCreate(vTaskPeriodicWrapper,
+                    p->name,
+                    512,
+                    p,
+                    p->priority,
+                    &p->handle);
 
-            p->state = JOB_IDLE;
+        p->state = JOB_IDLE;
 
-            //TODO: (delete comment later) fallthrough is what we want, since the teacher says to release immediatly
+        // TODO: (delete comment later) fallthrough is what we want, since the teacher says to release immediatly
 
-        case POLICY_CATCH_UP:
-            p->job_id++;
-            p->last_release = now;
-            p->abs_deadline = now + p->deadline;
-            xSemaphoreGive(p->release_sem);
-            vTaskResume(p->handle);
-            break;
+    case POLICY_CATCH_UP:
+        p->job_id++;
+        p->last_release = now;
+        p->abs_deadline = now + p->deadline;
+        xSemaphoreGive(p->release_sem);
+        vTaskResume(p->handle);
+        break;
     }
 }
 
@@ -219,20 +221,25 @@ static void vPeriodicReleaseManager(void *arg)
 
     TickType_t ptlFirstWakeTime = xTaskGetTickCount();
 
-    for (;;) {
+    for (;;)
+    {
         TickType_t now = xTaskGetTickCount();
         ListItem_t *it = listGET_HEAD_ENTRY(list);
 
-
-        while (it != listGET_END_MARKER(list)) {
+        while (it != listGET_END_MARKER(list))
+        {
             TaskDescription_t *p = listGET_LIST_ITEM_OWNER(it);
 
-            if ((now - p->last_release) >= p->period) {
+            if ((now - p->last_release) >= p->period)
+            {
                 /*  Task has exceeded deadline : deciding appropriate
                     response depending on policy */
-                if (p->state == JOB_RUNNING) {
+                if (p->state == JOB_RUNNING)
+                {
                     vHandleOverrun(p, now);
-                } else {
+                }
+                else
+                {
                     ReleaseLog("PTL_MGR", p->name, now);
 
                     p->job_id++;
@@ -249,9 +256,7 @@ static void vPeriodicReleaseManager(void *arg)
     }
 }
 
-
 /* -------- LAUNCH SCHEDULER EXTENSION -------- */
-
 
 void vStartPeriodicScheduler(List_t *PeriodicTaskConfigList)
 {

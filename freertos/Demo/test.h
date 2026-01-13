@@ -6,9 +6,9 @@
 
 typedef struct TaskConfiguration_s
 {
-    const char* name;
-    void(*func)(void*);
-    void* arg;
+    const char *name;
+    void (*func)(void *);
+    void *arg;
     uint32_t stack_size;
     uint32_t priority;
 
@@ -27,13 +27,12 @@ typedef struct SchedulerConfig_s
     // NOTE: Agreed to have a global scheduler config policy
     overrun_policy_t policy;
     uint32_t max_tasks;
-    TaskConfiguration_t* tasks;
+    TaskConfiguration_t *tasks;
     uint32_t num_tasks; // This could be extracted/deduced from the tasks array while parsing
-    
+
     // At end for optimal alignment
     bool trace_enabled;
 } SchedulerConfig_t;
-
 
 /**
  * @brief Create test tasks and register them in PTL lists.
@@ -42,6 +41,6 @@ typedef struct SchedulerConfig_s
  * @param nonPeriodicTaskConfigList list for NON periodic tasks
  * @return true on proper test initialization, false otherwise
  */
-bool InitTesting(SchedulerConfig_t* testConfiguration, List_t* periodicTaskConfigList, List_t* nonPeriodicTaskConfigList);
+bool InitTesting(SchedulerConfig_t *testConfiguration, List_t *periodicTaskConfigList, List_t *nonPeriodicTaskConfigList);
 
 #endif
