@@ -56,6 +56,8 @@ TaskDescription_t *vTaskProcessesCreate(const char *name,
 
     p->pid = pid_counter++;
     strncpy(p->name, name, MAXIMUM_NAME_SIZE);
+    // Note(Reda): This could be omitted since string literals are guaranteed to be null terminated. UNLESS the provided
+    //             string literal has size >= MAXIMUM_NAME_SIZE then this is needed and will cut the name short.
     p->name[MAXIMUM_NAME_SIZE - 1] = '\0';
 
     p->function = function;
