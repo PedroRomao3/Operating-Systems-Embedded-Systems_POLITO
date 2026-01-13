@@ -2,6 +2,7 @@
 #define TEST_H
 
 #include "setup.h"
+#define TRACE_ENABLED true
 
 typedef struct TaskConfiguration_s
 {
@@ -14,6 +15,7 @@ typedef struct TaskConfiguration_s
     // In ms. NOTE: If not initialized together with the deadline (default init to 0) then the task is considered NON Periodic
     uint32_t period;
     uint32_t deadline;
+    bool trace_enabled;
 
     // NOTE: Just in case we want to have an override policy from the global one
     // Default value POLICY_NONE, if anything different then it is considered an override
