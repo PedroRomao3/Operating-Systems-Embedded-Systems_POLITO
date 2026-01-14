@@ -34,6 +34,8 @@ int main(void)
     write_file("./Output/test.txt", "TEST");
     print_bool(cmp_file("./Output/test.txt", "TEST")); // should print True
 
+    print_bool(cmp_file("./Output/test.txt", " ")); // should print False
+
     UART_printf("1");
     vTaskListsInitialize(&PeriodicTaskConfigList, &NonPeriodicTaskConfigList);
 

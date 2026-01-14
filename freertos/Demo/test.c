@@ -241,6 +241,8 @@ const char *get_cmdline(void)
     return cmdline;
 }
 
+/* File management */
+
 void read_file(char* file_name)
 {
     FILE *f = fopen(file_name, "r");
@@ -273,15 +275,17 @@ bool cmp_file(char* file_name, char* expected_output)
         vLoggingPrintf("ERROR: can't open file %s \n", file_name);
     }
     int c;
-    bool is_equal = true;
 
-    while ((c = fgetc(f)) != EOF) {
-        is_equal = (c == (int)*expected_output);
+    while ((c = fgetc(f)) != EOF && strcmp(expected_output, "\0")) {
+        vLoggingPrintf("Comparing %d and %d\n", *expected_output, c);
+        if((c != (int)*expected_output))
+            return false;
+        expected_output++;
     }
 
     fclose(f);
 
-    return is_equal;
+    return true;
 }
 
 void print_bool(bool b)
