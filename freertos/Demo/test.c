@@ -1,8 +1,9 @@
 #include "test.h"
 #include "uart.h"
 #include "setup.h"
+#include <string.h>
 
-#define TEST_CASE 5
+#define TEST_CASE 8
 
 static void vBurnCPU(TickType_t ticks_to_wait)
 {
@@ -160,7 +161,133 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList)
         .num_tasks = 1,
         .max_tasks = 5
     };
+    InitTesting(&config, PeriodicList, NonPeriodicList);
+
+#endif
+
+#if TEST_CASE == 7
+    UART_printf("\n[TEST 5] Deadline Miss (Not Overrun)\n");
+
+    TaskConfiguration_t tasks[] = {
+        { "TaskMiss", TaskGeneric, (void *)pdMS_TO_TICKS(150),
+            512, 1, pdMS_TO_TICKS(100), pdMS_TO_TICKS(100), TRACE_ENABLED, POLICY_SKIP }
+    };
+
+    SchedulerConfig_t config = {
+        .policy = POLICY_SKIP,
+        .tasks = tasks,
+        .num_tasks = 1,
+        .max_tasks = 5
+    };
+    InitTesting(&config, PeriodicList, NonPeriodicList);
+
+#endif
+
+#if TEST_CASE == 8
+    UART_printf("\n[TEST 5] Deadline Miss (Not Overrun)\n");
+
+    TaskConfiguration_t tasks[] = {
+        { "TaskMiss", TaskGeneric, (void *)pdMS_TO_TICKS(150),
+            512, 1, pdMS_TO_TICKS(100), pdMS_TO_TICKS(100), TRACE_ENABLED, POLICY_SKIP }
+    };
+
+    SchedulerConfig_t config = {
+        .policy = POLICY_CATCH_UP,
+        .tasks = tasks,
+        .num_tasks = 1,
+        .max_tasks = 5
+    };
 
     InitTesting(&config, PeriodicList, NonPeriodicList);
 #endif
+}
+
+/* Retrieving arguments from command line */
+
+#define SYS_GET_CMDLINE 0x15
+
+static inline int semihosting_call(int reason, void *arg)
+{
+    int value;
+    __asm volatile (
+        "mov r0, %1\n"
+        "mov r1, %2\n"
+        "bkpt 0xAB\n"
+        "mov %0, r0\n"
+        : "=r"(value)
+        : "r"(reason), "r"(arg)
+        : "r0", "r1", "memory"
+    );
+    return value;
+}
+
+#define CMDLINE_MAX 128
+
+static char cmdline[CMDLINE_MAX];
+
+const char *get_cmdline(void)
+{
+    struct {
+        char *buf;
+        int len;
+    } args = {
+        .buf = cmdline,
+        .len = sizeof(cmdline)
+    };
+
+    if (semihosting_call(SYS_GET_CMDLINE, &args) != 0)
+        return NULL;
+
+    return cmdline;
+}
+
+void read_file(char* file_name)
+{
+    FILE *f = fopen(file_name, "r");
+    if (!f) {
+        vLoggingPrintf("ERROR: can't open file %s \n", file_name);
+    }
+    int c;
+
+    while ((c = fgetc(f)) != EOF) {
+        vLoggingPrintf("%c",c);
+    }
+
+    fclose(f);
+}
+
+void write_file(char* file_name, char* output)
+{
+    FILE *f = fopen(file_name, "w");
+    if (!f) {
+        vLoggingPrintf("ERROR: can't open file %s \n", file_name);
+    }
+    fprintf(f, "%s", output);
+    fclose(f);
+}
+
+bool cmp_file(char* file_name, char* expected_output)
+{
+    FILE *f = fopen(file_name, "r");
+    if (!f) {
+        vLoggingPrintf("ERROR: can't open file %s \n", file_name);
+    }
+    int c;
+    bool is_equal = true;
+
+    while ((c = fgetc(f)) != EOF) {
+        is_equal = (c == (int)*expected_output);
+    }
+
+    fclose(f);
+
+    return is_equal;
+}
+
+void print_bool(bool b)
+{
+    if(b)
+        UART_printf("True\n");
+    else
+        UART_printf("False\n");
 }

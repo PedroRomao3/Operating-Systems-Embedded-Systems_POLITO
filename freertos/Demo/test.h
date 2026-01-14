@@ -46,4 +46,12 @@ bool InitTesting(SchedulerConfig_t *testConfiguration, List_t *periodicTaskConfi
 
 void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList);
 
+const char *get_cmdline(void);
+
+void read_file(char* file_name);
+void write_file(char* file_name, char* output);
+
+bool cmp_file(char* file_name, char* expected_output);
+
+void print_bool(bool b);
 #endif
