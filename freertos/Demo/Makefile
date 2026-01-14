@@ -109,3 +109,9 @@ qemu_debug:
 # Start GDB
 gdb_start:
 	gdb-multiarch $(ELF)
+
+run:
+	$(MAKE) clean 
+	$(MAKE) all 
+	$(MAKE) qemu_start
+
