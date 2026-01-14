@@ -24,19 +24,19 @@ bool InitTesting(SchedulerConfig_t *testConfiguration, List_t *periodicTaskConfi
 {
     if (testConfiguration == NULL)
     {
-        SdkLog("InitTesting: testConfiguration is NULL\n");
+        LogAlways("InitTesting: testConfiguration is NULL\n");
         return false;
     }
 
     if (testConfiguration->num_tasks > 0 && testConfiguration->tasks == NULL)
     {
-        SdkLog("InitTesting: num_tasks > 0 but tasks array is NULL\n");
+        LogAlways("InitTesting: num_tasks > 0 but tasks array is NULL\n");
         return false;
     }
 
     if (testConfiguration->num_tasks > testConfiguration->max_tasks)
     {
-        SdkLog("InitTesting: num_tasks (%u) exceeds max_tasks (%u)\n",
+        LogAlways("InitTesting: num_tasks (%u) exceeds max_tasks (%u)\n",
                 testConfiguration->num_tasks, testConfiguration->max_tasks);
         return false;
     }
@@ -47,7 +47,7 @@ bool InitTesting(SchedulerConfig_t *testConfiguration, List_t *periodicTaskConfi
 
         if (currentTask.func == NULL)
         {
-            SdkLog("InitTesting: Task %u (%s) has NULL function\n", i, currentTask.name);
+            LogAlways("InitTesting: Task %u (%s) has NULL function\n", i, currentTask.name);
             return false;
         }
 
@@ -247,14 +247,14 @@ void read_file(char* file_name)
 {
     FILE *f = fopen(file_name, "r");
     if (!f) {
-        vLoggingPrintf("ERROR: can't open file %s \n", file_name);
+        LogError("Can't open file %s \n", file_name);
     }
     int c;
 
     while ((c = fgetc(f)) != EOF) {
         vLoggingPrintf("%c",c);
     }
-
+    vLoggingPrintf("\n");
     fclose(f);
 }
 
@@ -262,22 +262,24 @@ void write_file(char* file_name, char* output)
 {
     FILE *f = fopen(file_name, "w");
     if (!f) {
-        vLoggingPrintf("ERROR: can't open file %s \n", file_name);
+        LogError("Can't open file %s \n", file_name);
     }
     fprintf(f, "%s", output);
     fclose(f);
 }
 
+/*  Note: undefined behavior if content of file or expected output
+    are blank (= "") */
 bool cmp_file(char* file_name, char* expected_output)
 {
     FILE *f = fopen(file_name, "r");
     if (!f) {
-        vLoggingPrintf("ERROR: can't open file %s \n", file_name);
+        LogError("Can't open file %s \n", file_name);
     }
     int c;
 
     while ((c = fgetc(f)) != EOF && strcmp(expected_output, "\0")) {
-        vLoggingPrintf("Comparing %d and %d\n", *expected_output, c);
+        LogInfo("Comparing %d and %d\n", *expected_output, c);
         if((c != (int)*expected_output)){
             fclose(f);
             return false;       
@@ -290,8 +292,12 @@ bool cmp_file(char* file_name, char* expected_output)
 
 void print_bool(bool b)
 {
-    if(b)
-        UART_printf("True\n");
+    if(b){
+        LogAlways("True\n");
+    }
     else
-        UART_printf("False\n");
+{
+    LogAlways("False\n");
+
+}
 }

@@ -26,7 +26,7 @@ int main(void)
     /* Reads the arguments given in the command line */
     char *cmd = (char *)get_cmdline();
 
-    vLoggingPrintf(cmd);
+    LogAlways(cmd);
     UART_printf("\n");
 
     /*  Example of writing/reading a file and testing its content 
