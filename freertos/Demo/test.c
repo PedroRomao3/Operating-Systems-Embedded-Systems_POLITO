@@ -278,13 +278,13 @@ bool cmp_file(char* file_name, char* expected_output)
 
     while ((c = fgetc(f)) != EOF && strcmp(expected_output, "\0")) {
         vLoggingPrintf("Comparing %d and %d\n", *expected_output, c);
-        if((c != (int)*expected_output))
-            return false;
+        if((c != (int)*expected_output)){
+            fclose(f);
+            return false;       
+        }
         expected_output++;
     }
-
     fclose(f);
-
     return true;
 }
 
