@@ -1,0 +1,1196 @@
+
+[TEST 1] Single Periodic Task
+[ 0 ] PTL_MGR released TaskA
+[TRACE] 1:TaskA:START
+[TRACE] 3:TaskA:END
+[ 10 ] PTL_MGR released TaskA
+[TRACE] 10:TaskA:START
+[TRACE] 12:TaskA:END
+[ 20 ] PTL_MGR released TaskA
+[TRACE] 20:TaskA:START
+[TRACE] 22:TaskA:END
+[ 30 ] PTL_MGR released TaskA
+[TRACE] 30:TaskA:START
+[TRACE] 32:TaskA:END
+[ 40 ] PTL_MGR released TaskA
+[TRACE] 40:TaskA:START
+[TRACE] 42:TaskA:END
+[ 50 ] PTL_MGR released TaskA
+[TRACE] 50:TaskA:START
+[TRACE] 52:TaskA:END
+[ 60 ] PTL_MGR released TaskA
+[TRACE] 60:TaskA:START
+[TRACE] 62:TaskA:END
+[ 70 ] PTL_MGR released TaskA
+[TRACE] 70:TaskA:START
+[TRACE] 72:TaskA:END
+[ 80 ] PTL_MGR released TaskA
+[TRACE] 80:TaskA:START
+[TRACE] 82:TaskA:END
+[ 90 ] PTL_MGR released TaskA
+[TRACE] 90:TaskA:START
+[TRACE] 92:TaskA:END
+[ 100 ] PTL_MGR released TaskA
+[TRACE] 100:TaskA:START
+[TRACE] 102:TaskA:END
+[ 110 ] PTL_MGR released TaskA
+[TRACE] 110:TaskA:START
+[TRACE] 112:TaskA:END
+[ 120 ] PTL_MGR released TaskA
+[TRACE] 120:TaskA:START
+[TRACE] 122:TaskA:END
+[ 130 ] PTL_MGR released TaskA
+[TRACE] 130:TaskA:START
+[TRACE] 132:TaskA:END
+[ 140 ] PTL_MGR released TaskA
+[TRACE] 140:TaskA:START
+[TRACE] 142:TaskA:END
+[ 150 ] PTL_MGR released TaskA
+[TRACE] 150:TaskA:START
+[TRACE] 152:TaskA:END
+[ 160 ] PTL_MGR released TaskA
+[TRACE] 160:TaskA:START
+[TRACE] 162:TaskA:END
+[ 170 ] PTL_MGR released TaskA
+[TRACE] 170:TaskA:START
+[TRACE] 172:TaskA:END
+[ 180 ] PTL_MGR released TaskA
+[TRACE] 180:TaskA:START
+[TRACE] 182:TaskA:END
+[ 190 ] PTL_MGR released TaskA
+[TRACE] 190:TaskA:START
+[TRACE] 192:TaskA:END
+[ 200 ] PTL_MGR released TaskA
+[TRACE] 200:TaskA:START
+[TRACE] 202:TaskA:END
+[ 210 ] PTL_MGR released TaskA
+[TRACE] 210:TaskA:START
+[TRACE] 212:TaskA:END
+[ 220 ] PTL_MGR released TaskA
+[TRACE] 220:TaskA:START
+[TRACE] 222:TaskA:END
+[ 230 ] PTL_MGR released TaskA
+[TRACE] 230:TaskA:START
+[TRACE] 232:TaskA:END
+[ 240 ] PTL_MGR released TaskA
+[TRACE] 240:TaskA:START
+[TRACE] 242:TaskA:END
+[ 250 ] PTL_MGR released TaskA
+[TRACE] 250:TaskA:START
+[TRACE] 252:TaskA:END
+[ 260 ] PTL_MGR released TaskA
+[TRACE] 260:TaskA:START
+[TRACE] 262:TaskA:END
+[ 270 ] PTL_MGR released TaskA
+[TRACE] 270:TaskA:START
+[TRACE] 272:TaskA:END
+[ 280 ] PTL_MGR released TaskA
+[TRACE] 280:TaskA:START
+[TRACE] 282:TaskA:END
+[ 290 ] PTL_MGR released TaskA
+[TRACE] 290:TaskA:START
+[TRACE] 292:TaskA:END
+[ 300 ] PTL_MGR released TaskA
+[TRACE] 300:TaskA:START
+[TRACE] 302:TaskA:END
+[ 310 ] PTL_MGR released TaskA
+[TRACE] 310:TaskA:START
+[TRACE] 312:TaskA:END
+[ 320 ] PTL_MGR released TaskA
+[TRACE] 320:TaskA:START
+[TRACE] 322:TaskA:END
+[ 330 ] PTL_MGR released TaskA
+[TRACE] 330:TaskA:START
+[TRACE] 332:TaskA:END
+[ 340 ] PTL_MGR released TaskA
+[TRACE] 340:TaskA:START
+[TRACE] 342:TaskA:END
+[ 350 ] PTL_MGR released TaskA
+[TRACE] 350:TaskA:START
+[TRACE] 352:TaskA:END
+[ 360 ] PTL_MGR released TaskA
+[TRACE] 360:TaskA:START
+[TRACE] 362:TaskA:END
+[ 370 ] PTL_MGR released TaskA
+[TRACE] 370:TaskA:START
+[TRACE] 372:TaskA:END
+[ 380 ] PTL_MGR released TaskA
+[TRACE] 380:TaskA:START
+[TRACE] 382:TaskA:END
+[ 390 ] PTL_MGR released TaskA
+[TRACE] 390:TaskA:START
+[TRACE] 392:TaskA:END
+[ 400 ] PTL_MGR released TaskA
+[TRACE] 400:TaskA:START
+[TRACE] 402:TaskA:END
+[ 410 ] PTL_MGR released TaskA
+[TRACE] 410:TaskA:START
+[TRACE] 412:TaskA:END
+[ 420 ] PTL_MGR released TaskA
+[TRACE] 420:TaskA:START
+[TRACE] 422:TaskA:END
+[ 430 ] PTL_MGR released TaskA
+[TRACE] 430:TaskA:START
+[TRACE] 432:TaskA:END
+[ 440 ] PTL_MGR released TaskA
+[TRACE] 440:TaskA:START
+[TRACE] 442:TaskA:END
+[ 450 ] PTL_MGR released TaskA
+[TRACE] 450:TaskA:START
+[TRACE] 452:TaskA:END
+[ 460 ] PTL_MGR released TaskA
+[TRACE] 460:TaskA:START
+[TRACE] 462:TaskA:END
+[ 470 ] PTL_MGR released TaskA
+[TRACE] 470:TaskA:START
+[TRACE] 472:TaskA:END
+[ 480 ] PTL_MGR released TaskA
+[TRACE] 480:TaskA:START
+[TRACE] 482:TaskA:END
+[ 490 ] PTL_MGR released TaskA
+[TRACE] 490:TaskA:START
+[TRACE] 492:TaskA:END
+[ 500 ] PTL_MGR released TaskA
+[TRACE] 500:TaskA:START
+[TRACE] 502:TaskA:END
+[ 510 ] PTL_MGR released TaskA
+[TRACE] 510:TaskA:START
+[TRACE] 512:TaskA:END
+[ 520 ] PTL_MGR released TaskA
+[TRACE] 520:TaskA:START
+[TRACE] 522:TaskA:END
+[ 530 ] PTL_MGR released TaskA
+[TRACE] 530:TaskA:START
+[TRACE] 532:TaskA:END
+[ 540 ] PTL_MGR released TaskA
+[TRACE] 540:TaskA:START
+[TRACE] 542:TaskA:END
+[ 550 ] PTL_MGR released TaskA
+[TRACE] 550:TaskA:START
+[TRACE] 552:TaskA:END
+[ 560 ] PTL_MGR released TaskA
+[TRACE] 560:TaskA:START
+[TRACE] 562:TaskA:END
+[ 570 ] PTL_MGR released TaskA
+[TRACE] 570:TaskA:START
+[TRACE] 572:TaskA:END
+[ 580 ] PTL_MGR released TaskA
+[TRACE] 580:TaskA:START
+[TRACE] 582:TaskA:END
+[ 590 ] PTL_MGR released TaskA
+[TRACE] 590:TaskA:START
+[TRACE] 592:TaskA:END
+[ 600 ] PTL_MGR released TaskA
+[TRACE] 600:TaskA:START
+[TRACE] 602:TaskA:END
+[ 610 ] PTL_MGR released TaskA
+[TRACE] 610:TaskA:START
+[TRACE] 612:TaskA:END
+[ 620 ] PTL_MGR released TaskA
+[TRACE] 620:TaskA:START
+[TRACE] 622:TaskA:END
+[ 630 ] PTL_MGR released TaskA
+[TRACE] 630:TaskA:START
+[TRACE] 632:TaskA:END
+[ 640 ] PTL_MGR released TaskA
+[TRACE] 640:TaskA:START
+[TRACE] 642:TaskA:END
+[ 650 ] PTL_MGR released TaskA
+[TRACE] 650:TaskA:START
+[TRACE] 652:TaskA:END
+[ 660 ] PTL_MGR released TaskA
+[TRACE] 660:TaskA:START
+[TRACE] 662:TaskA:END
+[ 670 ] PTL_MGR released TaskA
+[TRACE] 670:TaskA:START
+[TRACE] 672:TaskA:END
+[ 680 ] PTL_MGR released TaskA
+[TRACE] 680:TaskA:START
+[TRACE] 682:TaskA:END
+[ 690 ] PTL_MGR released TaskA
+[TRACE] 690:TaskA:START
+[TRACE] 692:TaskA:END
+[ 700 ] PTL_MGR released TaskA
+[TRACE] 700:TaskA:START
+[TRACE] 702:TaskA:END
+[ 710 ] PTL_MGR released TaskA
+[TRACE] 710:TaskA:START
+[TRACE] 712:TaskA:END
+[ 720 ] PTL_MGR released TaskA
+[TRACE] 720:TaskA:START
+[TRACE] 722:TaskA:END
+[ 730 ] PTL_MGR released TaskA
+[TRACE] 730:TaskA:START
+[TRACE] 732:TaskA:END
+[ 740 ] PTL_MGR released TaskA
+[TRACE] 740:TaskA:START
+[TRACE] 742:TaskA:END
+[ 750 ] PTL_MGR released TaskA
+[TRACE] 750:TaskA:START
+[TRACE] 752:TaskA:END
+[ 760 ] PTL_MGR released TaskA
+[TRACE] 760:TaskA:START
+[TRACE] 762:TaskA:END
+[ 770 ] PTL_MGR released TaskA
+[TRACE] 770:TaskA:START
+[TRACE] 772:TaskA:END
+[ 780 ] PTL_MGR released TaskA
+[TRACE] 780:TaskA:START
+[TRACE] 782:TaskA:END
+[ 790 ] PTL_MGR released TaskA
+[TRACE] 790:TaskA:START
+[TRACE] 792:TaskA:END
+[ 800 ] PTL_MGR released TaskA
+[TRACE] 800:TaskA:START
+[TRACE] 802:TaskA:END
+[ 810 ] PTL_MGR released TaskA
+[TRACE] 810:TaskA:START
+[TRACE] 812:TaskA:END
+[ 820 ] PTL_MGR released TaskA
+[TRACE] 820:TaskA:START
+[TRACE] 822:TaskA:END
+[ 830 ] PTL_MGR released TaskA
+[TRACE] 830:TaskA:START
+[TRACE] 832:TaskA:END
+[ 840 ] PTL_MGR released TaskA
+[TRACE] 840:TaskA:START
+[TRACE] 842:TaskA:END
+[ 850 ] PTL_MGR released TaskA
+[TRACE] 850:TaskA:START
+[TRACE] 852:TaskA:END
+[ 860 ] PTL_MGR released TaskA
+[TRACE] 860:TaskA:START
+[TRACE] 862:TaskA:END
+[ 870 ] PTL_MGR released TaskA
+[TRACE] 870:TaskA:START
+[TRACE] 872:TaskA:END
+[ 880 ] PTL_MGR released TaskA
+[TRACE] 880:TaskA:START
+[TRACE] 882:TaskA:END
+[ 890 ] PTL_MGR released TaskA
+[TRACE] 890:TaskA:START
+[TRACE] 892:TaskA:END
+[ 900 ] PTL_MGR released TaskA
+[TRACE] 900:TaskA:START
+[TRACE] 902:TaskA:END
+[ 910 ] PTL_MGR released TaskA
+[TRACE] 910:TaskA:START
+[TRACE] 912:TaskA:END
+[ 920 ] PTL_MGR released TaskA
+[TRACE] 920:TaskA:START
+[TRACE] 922:TaskA:END
+[ 930 ] PTL_MGR released TaskA
+[TRACE] 930:TaskA:START
+[TRACE] 932:TaskA:END
+[ 940 ] PTL_MGR released TaskA
+[TRACE] 940:TaskA:START
+[TRACE] 942:TaskA:END
+[ 950 ] PTL_MGR released TaskA
+[TRACE] 950:TaskA:START
+[TRACE] 952:TaskA:END
+[ 960 ] PTL_MGR released TaskA
+[TRACE] 960:TaskA:START
+[TRACE] 962:TaskA:END
+[ 970 ] PTL_MGR released TaskA
+[TRACE] 970:TaskA:START
+[TRACE] 972:TaskA:END
+[ 980 ] PTL_MGR released TaskA
+[TRACE] 980:TaskA:START
+[TRACE] 982:TaskA:END
+[ 990 ] PTL_MGR released TaskA
+[TRACE] 990:TaskA:START
+[TRACE] 992:TaskA:END
+[ 1000 ] PTL_MGR released TaskA
+[TRACE] 1000:TaskA:START
+[TRACE] 1002:TaskA:END
+[ 1010 ] PTL_MGR released TaskA
+[TRACE] 1010:TaskA:START
+[TRACE] 1012:TaskA:END
+[ 1020 ] PTL_MGR released TaskA
+[TRACE] 1020:TaskA:START
+[TRACE] 1022:TaskA:END
+[ 1030 ] PTL_MGR released TaskA
+[TRACE] 1030:TaskA:START
+[TRACE] 1032:TaskA:END
+[ 1040 ] PTL_MGR released TaskA
+[TRACE] 1040:TaskA:START
+[TRACE] 1042:TaskA:END
+[ 1050 ] PTL_MGR released TaskA
+[TRACE] 1050:TaskA:START
+[TRACE] 1052:TaskA:END
+[ 1060 ] PTL_MGR released TaskA
+[TRACE] 1060:TaskA:START
+[TRACE] 1062:TaskA:END
+[ 1070 ] PTL_MGR released TaskA
+[TRACE] 1070:TaskA:START
+[TRACE] 1072:TaskA:END
+[ 1080 ] PTL_MGR released TaskA
+[TRACE] 1080:TaskA:START
+[TRACE] 1082:TaskA:END
+[ 1090 ] PTL_MGR released TaskA
+[TRACE] 1090:TaskA:START
+[TRACE] 1092:TaskA:END
+[ 1100 ] PTL_MGR released TaskA
+[TRACE] 1100:TaskA:START
+[TRACE] 1102:TaskA:END
+[ 1110 ] PTL_MGR released TaskA
+[TRACE] 1110:TaskA:START
+[TRACE] 1112:TaskA:END
+[ 1120 ] PTL_MGR released TaskA
+[TRACE] 1120:TaskA:START
+[TRACE] 1122:TaskA:END
+[ 1130 ] PTL_MGR released TaskA
+[TRACE] 1130:TaskA:START
+[TRACE] 1132:TaskA:END
+[ 1140 ] PTL_MGR released TaskA
+[TRACE] 1140:TaskA:START
+[TRACE] 1142:TaskA:END
+[ 1150 ] PTL_MGR released TaskA
+[TRACE] 1150:TaskA:START
+[TRACE] 1152:TaskA:END
+[ 1160 ] PTL_MGR released TaskA
+[TRACE] 1160:TaskA:START
+[TRACE] 1162:TaskA:END
+[ 1170 ] PTL_MGR released TaskA
+[TRACE] 1170:TaskA:START
+[TRACE] 1172:TaskA:END
+[ 1180 ] PTL_MGR released TaskA
+[TRACE] 1180:TaskA:START
+[TRACE] 1182:TaskA:END
+[ 1190 ] PTL_MGR released TaskA
+[TRACE] 1190:TaskA:START
+[TRACE] 1192:TaskA:END
+[ 1200 ] PTL_MGR released TaskA
+[TRACE] 1200:TaskA:START
+[TRACE] 1202:TaskA:END
+[ 1210 ] PTL_MGR released TaskA
+[TRACE] 1210:TaskA:START
+[TRACE] 1212:TaskA:END
+[ 1220 ] PTL_MGR released TaskA
+[TRACE] 1220:TaskA:START
+[TRACE] 1222:TaskA:END
+[ 1230 ] PTL_MGR released TaskA
+[TRACE] 1230:TaskA:START
+[TRACE] 1232:TaskA:END
+[ 1240 ] PTL_MGR released TaskA
+[TRACE] 1240:TaskA:START
+[TRACE] 1242:TaskA:END
+[ 1250 ] PTL_MGR released TaskA
+[TRACE] 1250:TaskA:START
+[TRACE] 1252:TaskA:END
+[ 1260 ] PTL_MGR released TaskA
+[TRACE] 1260:TaskA:START
+[TRACE] 1262:TaskA:END
+[ 1270 ] PTL_MGR released TaskA
+[TRACE] 1270:TaskA:START
+[TRACE] 1272:TaskA:END
+[ 1280 ] PTL_MGR released TaskA
+[TRACE] 1280:TaskA:START
+[TRACE] 1282:TaskA:END
+[ 1290 ] PTL_MGR released TaskA
+[TRACE] 1290:TaskA:START
+[TRACE] 1292:TaskA:END
+[ 1300 ] PTL_MGR released TaskA
+[TRACE] 1300:TaskA:START
+[TRACE] 1302:TaskA:END
+[ 1310 ] PTL_MGR released TaskA
+[TRACE] 1310:TaskA:START
+[TRACE] 1312:TaskA:END
+[ 1320 ] PTL_MGR released TaskA
+[TRACE] 1320:TaskA:START
+[TRACE] 1322:TaskA:END
+[ 1330 ] PTL_MGR released TaskA
+[TRACE] 1330:TaskA:START
+[TRACE] 1332:TaskA:END
+[ 1340 ] PTL_MGR released TaskA
+[TRACE] 1340:TaskA:START
+[TRACE] 1342:TaskA:END
+[ 1350 ] PTL_MGR released TaskA
+[TRACE] 1350:TaskA:START
+[TRACE] 1352:TaskA:END
+[ 1360 ] PTL_MGR released TaskA
+[TRACE] 1360:TaskA:START
+[TRACE] 1362:TaskA:END
+[ 1370 ] PTL_MGR released TaskA
+[TRACE] 1370:TaskA:START
+[TRACE] 1372:TaskA:END
+[ 1380 ] PTL_MGR released TaskA
+[TRACE] 1380:TaskA:START
+[TRACE] 1382:TaskA:END
+[ 1390 ] PTL_MGR released TaskA
+[TRACE] 1390:TaskA:START
+[TRACE] 1392:TaskA:END
+[ 1400 ] PTL_MGR released TaskA
+[TRACE] 1400:TaskA:START
+[TRACE] 1402:TaskA:END
+[ 1410 ] PTL_MGR released TaskA
+[TRACE] 1410:TaskA:START
+[TRACE] 1412:TaskA:END
+[ 1420 ] PTL_MGR released TaskA
+[TRACE] 1420:TaskA:START
+[TRACE] 1422:TaskA:END
+[ 1430 ] PTL_MGR released TaskA
+[TRACE] 1430:TaskA:START
+[TRACE] 1432:TaskA:END
+[ 1440 ] PTL_MGR released TaskA
+[TRACE] 1440:TaskA:START
+[TRACE] 1442:TaskA:END
+[ 1450 ] PTL_MGR released TaskA
+[TRACE] 1450:TaskA:START
+[TRACE] 1452:TaskA:END
+[ 1460 ] PTL_MGR released TaskA
+[TRACE] 1460:TaskA:START
+[TRACE] 1462:TaskA:END
+[ 1470 ] PTL_MGR released TaskA
+[TRACE] 1470:TaskA:START
+[TRACE] 1472:TaskA:END
+[ 1480 ] PTL_MGR released TaskA
+[TRACE] 1480:TaskA:START
+[TRACE] 1482:TaskA:END
+[ 1490 ] PTL_MGR released TaskA
+[TRACE] 1490:TaskA:START
+[TRACE] 1492:TaskA:END
+[ 1500 ] PTL_MGR released TaskA
+[TRACE] 1500:TaskA:START
+[TRACE] 1502:TaskA:END
+[ 1510 ] PTL_MGR released TaskA
+[TRACE] 1510:TaskA:START
+[TRACE] 1512:TaskA:END
+[ 1520 ] PTL_MGR released TaskA
+[TRACE] 1520:TaskA:START
+[TRACE] 1522:TaskA:END
+[ 1530 ] PTL_MGR released TaskA
+[TRACE] 1530:TaskA:START
+[TRACE] 1532:TaskA:END
+[ 1540 ] PTL_MGR released TaskA
+[TRACE] 1540:TaskA:START
+[TRACE] 1542:TaskA:END
+[ 1550 ] PTL_MGR released TaskA
+[TRACE] 1550:TaskA:START
+[TRACE] 1552:TaskA:END
+[ 1560 ] PTL_MGR released TaskA
+[TRACE] 1560:TaskA:START
+[TRACE] 1562:TaskA:END
+[ 1570 ] PTL_MGR released TaskA
+[TRACE] 1570:TaskA:START
+[TRACE] 1572:TaskA:END
+[ 1580 ] PTL_MGR released TaskA
+[TRACE] 1580:TaskA:START
+[TRACE] 1582:TaskA:END
+[ 1590 ] PTL_MGR released TaskA
+[TRACE] 1590:TaskA:START
+[TRACE] 1592:TaskA:END
+[ 1600 ] PTL_MGR released TaskA
+[TRACE] 1600:TaskA:START
+[TRACE] 1602:TaskA:END
+[ 1610 ] PTL_MGR released TaskA
+[TRACE] 1610:TaskA:START
+[TRACE] 1612:TaskA:END
+[ 1620 ] PTL_MGR released TaskA
+[TRACE] 1620:TaskA:START
+[TRACE] 1622:TaskA:END
+[ 1630 ] PTL_MGR released TaskA
+[TRACE] 1630:TaskA:START
+[TRACE] 1632:TaskA:END
+[ 1640 ] PTL_MGR released TaskA
+[TRACE] 1640:TaskA:START
+[TRACE] 1642:TaskA:END
+[ 1650 ] PTL_MGR released TaskA
+[TRACE] 1650:TaskA:START
+[TRACE] 1652:TaskA:END
+[ 1660 ] PTL_MGR released TaskA
+[TRACE] 1660:TaskA:START
+[TRACE] 1662:TaskA:END
+[ 1670 ] PTL_MGR released TaskA
+[TRACE] 1670:TaskA:START
+[TRACE] 1672:TaskA:END
+[ 1680 ] PTL_MGR released TaskA
+[TRACE] 1680:TaskA:START
+[TRACE] 1682:TaskA:END
+[ 1690 ] PTL_MGR released TaskA
+[TRACE] 1690:TaskA:START
+[TRACE] 1692:TaskA:END
+[ 1700 ] PTL_MGR released TaskA
+[TRACE] 1700:TaskA:START
+[TRACE] 1702:TaskA:END
+[ 1710 ] PTL_MGR released TaskA
+[TRACE] 1710:TaskA:START
+[TRACE] 1712:TaskA:END
+[ 1720 ] PTL_MGR released TaskA
+[TRACE] 1720:TaskA:START
+[TRACE] 1722:TaskA:END
+[ 1730 ] PTL_MGR released TaskA
+[TRACE] 1730:TaskA:START
+[TRACE] 1732:TaskA:END
+[ 1740 ] PTL_MGR released TaskA
+[TRACE] 1740:TaskA:START
+[TRACE] 1742:TaskA:END
+[ 1750 ] PTL_MGR released TaskA
+[TRACE] 1750:TaskA:START
+[TRACE] 1752:TaskA:END
+[ 1760 ] PTL_MGR released TaskA
+[TRACE] 1760:TaskA:START
+[TRACE] 1762:TaskA:END
+[ 1770 ] PTL_MGR released TaskA
+[TRACE] 1770:TaskA:START
+[TRACE] 1772:TaskA:END
+[ 1780 ] PTL_MGR released TaskA
+[TRACE] 1780:TaskA:START
+[TRACE] 1782:TaskA:END
+[ 1790 ] PTL_MGR released TaskA
+[TRACE] 1790:TaskA:START
+[TRACE] 1792:TaskA:END
+[ 1800 ] PTL_MGR released TaskA
+[TRACE] 1800:TaskA:START
+[TRACE] 1802:TaskA:END
+[ 1810 ] PTL_MGR released TaskA
+[TRACE] 1810:TaskA:START
+[TRACE] 1812:TaskA:END
+[ 1820 ] PTL_MGR released TaskA
+[TRACE] 1820:TaskA:START
+[TRACE] 1822:TaskA:END
+[ 1830 ] PTL_MGR released TaskA
+[TRACE] 1830:TaskA:START
+[TRACE] 1832:TaskA:END
+[ 1840 ] PTL_MGR released TaskA
+[TRACE] 1840:TaskA:START
+[TRACE] 1842:TaskA:END
+[ 1850 ] PTL_MGR released TaskA
+[TRACE] 1850:TaskA:START
+[TRACE] 1852:TaskA:END
+[ 1860 ] PTL_MGR released TaskA
+[TRACE] 1860:TaskA:START
+[TRACE] 1862:TaskA:END
+[ 1870 ] PTL_MGR released TaskA
+[TRACE] 1870:TaskA:START
+[TRACE] 1872:TaskA:END
+[ 1880 ] PTL_MGR released TaskA
+[TRACE] 1880:TaskA:START
+[TRACE] 1882:TaskA:END
+[ 1890 ] PTL_MGR released TaskA
+[TRACE] 1890:TaskA:START
+[TRACE] 1892:TaskA:END
+[ 1900 ] PTL_MGR released TaskA
+[TRACE] 1900:TaskA:START
+[TRACE] 1902:TaskA:END
+[ 1910 ] PTL_MGR released TaskA
+[TRACE] 1910:TaskA:START
+[TRACE] 1912:TaskA:END
+[ 1920 ] PTL_MGR released TaskA
+[TRACE] 1920:TaskA:START
+[TRACE] 1922:TaskA:END
+[ 1930 ] PTL_MGR released TaskA
+[TRACE] 1930:TaskA:START
+[TRACE] 1932:TaskA:END
+[ 1940 ] PTL_MGR released TaskA
+[TRACE] 1940:TaskA:START
+[TRACE] 1942:TaskA:END
+[ 1950 ] PTL_MGR released TaskA
+[TRACE] 1950:TaskA:START
+[TRACE] 1952:TaskA:END
+[ 1960 ] PTL_MGR released TaskA
+[TRACE] 1960:TaskA:START
+[TRACE] 1962:TaskA:END
+[ 1970 ] PTL_MGR released TaskA
+[TRACE] 1970:TaskA:START
+[TRACE] 1972:TaskA:END
+[ 1980 ] PTL_MGR released TaskA
+[TRACE] 1980:TaskA:START
+[TRACE] 1982:TaskA:END
+[ 1990 ] PTL_MGR released TaskA
+[TRACE] 1990:TaskA:START
+[TRACE] 1992:TaskA:END
+[ 2000 ] PTL_MGR released TaskA
+[TRACE] 2000:TaskA:START
+[TRACE] 2002:TaskA:END
+[ 2010 ] PTL_MGR released TaskA
+[TRACE] 2010:TaskA:START
+[TRACE] 2012:TaskA:END
+[ 2020 ] PTL_MGR released TaskA
+[TRACE] 2020:TaskA:START
+[TRACE] 2022:TaskA:END
+[ 2030 ] PTL_MGR released TaskA
+[TRACE] 2030:TaskA:START
+[TRACE] 2032:TaskA:END
+[ 2040 ] PTL_MGR released TaskA
+[TRACE] 2040:TaskA:START
+[TRACE] 2042:TaskA:END
+[ 2050 ] PTL_MGR released TaskA
+[TRACE] 2050:TaskA:START
+[TRACE] 2052:TaskA:END
+[ 2060 ] PTL_MGR released TaskA
+[TRACE] 2060:TaskA:START
+[TRACE] 2062:TaskA:END
+[ 2070 ] PTL_MGR released TaskA
+[TRACE] 2070:TaskA:START
+[TRACE] 2072:TaskA:END
+[ 2080 ] PTL_MGR released TaskA
+[TRACE] 2080:TaskA:START
+[TRACE] 2082:TaskA:END
+[ 2090 ] PTL_MGR released TaskA
+[TRACE] 2090:TaskA:START
+[TRACE] 2092:TaskA:END
+[ 2100 ] PTL_MGR released TaskA
+[TRACE] 2100:TaskA:START
+[TRACE] 2102:TaskA:END
+[ 2110 ] PTL_MGR released TaskA
+[TRACE] 2110:TaskA:START
+[TRACE] 2112:TaskA:END
+[ 2120 ] PTL_MGR released TaskA
+[TRACE] 2120:TaskA:START
+[TRACE] 2122:TaskA:END
+[ 2130 ] PTL_MGR released TaskA
+[TRACE] 2130:TaskA:START
+[TRACE] 2132:TaskA:END
+[ 2140 ] PTL_MGR released TaskA
+[TRACE] 2140:TaskA:START
+[TRACE] 2142:TaskA:END
+[ 2150 ] PTL_MGR released TaskA
+[TRACE] 2150:TaskA:START
+[TRACE] 2152:TaskA:END
+[ 2160 ] PTL_MGR released TaskA
+[TRACE] 2160:TaskA:START
+[TRACE] 2162:TaskA:END
+[ 2170 ] PTL_MGR released TaskA
+[TRACE] 2170:TaskA:START
+[TRACE] 2172:TaskA:END
+[ 2180 ] PTL_MGR released TaskA
+[TRACE] 2180:TaskA:START
+[TRACE] 2182:TaskA:END
+[ 2190 ] PTL_MGR released TaskA
+[TRACE] 2190:TaskA:START
+[TRACE] 2192:TaskA:END
+[ 2200 ] PTL_MGR released TaskA
+[TRACE] 2200:TaskA:START
+[TRACE] 2202:TaskA:END
+[ 2210 ] PTL_MGR released TaskA
+[TRACE] 2210:TaskA:START
+[TRACE] 2212:TaskA:END
+[ 2220 ] PTL_MGR released TaskA
+[TRACE] 2220:TaskA:START
+[TRACE] 2222:TaskA:END
+[ 2230 ] PTL_MGR released TaskA
+[TRACE] 2230:TaskA:START
+[TRACE] 2232:TaskA:END
+[ 2240 ] PTL_MGR released TaskA
+[TRACE] 2240:TaskA:START
+[TRACE] 2242:TaskA:END
+[ 2250 ] PTL_MGR released TaskA
+[TRACE] 2250:TaskA:START
+[TRACE] 2252:TaskA:END
+[ 2260 ] PTL_MGR released TaskA
+[TRACE] 2260:TaskA:START
+[TRACE] 2262:TaskA:END
+[ 2270 ] PTL_MGR released TaskA
+[TRACE] 2270:TaskA:START
+[TRACE] 2272:TaskA:END
+[ 2280 ] PTL_MGR released TaskA
+[TRACE] 2280:TaskA:START
+[TRACE] 2282:TaskA:END
+[ 2290 ] PTL_MGR released TaskA
+[TRACE] 2290:TaskA:START
+[TRACE] 2292:TaskA:END
+[ 2300 ] PTL_MGR released TaskA
+[TRACE] 2300:TaskA:START
+[TRACE] 2302:TaskA:END
+[ 2310 ] PTL_MGR released TaskA
+[TRACE] 2310:TaskA:START
+[TRACE] 2312:TaskA:END
+[ 2320 ] PTL_MGR released TaskA
+[TRACE] 2320:TaskA:START
+[TRACE] 2322:TaskA:END
+[ 2330 ] PTL_MGR released TaskA
+[TRACE] 2330:TaskA:START
+[TRACE] 2332:TaskA:END
+[ 2340 ] PTL_MGR released TaskA
+[TRACE] 2340:TaskA:START
+[TRACE] 2342:TaskA:END
+[ 2350 ] PTL_MGR released TaskA
+[TRACE] 2350:TaskA:START
+[TRACE] 2352:TaskA:END
+[ 2360 ] PTL_MGR released TaskA
+[TRACE] 2360:TaskA:START
+[TRACE] 2362:TaskA:END
+[ 2370 ] PTL_MGR released TaskA
+[TRACE] 2370:TaskA:START
+[TRACE] 2372:TaskA:END
+[ 2380 ] PTL_MGR released TaskA
+[TRACE] 2380:TaskA:START
+[TRACE] 2382:TaskA:END
+[ 2390 ] PTL_MGR released TaskA
+[TRACE] 2390:TaskA:START
+[TRACE] 2392:TaskA:END
+[ 2400 ] PTL_MGR released TaskA
+[TRACE] 2400:TaskA:START
+[TRACE] 2402:TaskA:END
+[ 2410 ] PTL_MGR released TaskA
+[TRACE] 2410:TaskA:START
+[TRACE] 2412:TaskA:END
+[ 2420 ] PTL_MGR released TaskA
+[TRACE] 2420:TaskA:START
+[TRACE] 2422:TaskA:END
+[ 2430 ] PTL_MGR released TaskA
+[TRACE] 2430:TaskA:START
+[TRACE] 2432:TaskA:END
+[ 2440 ] PTL_MGR released TaskA
+[TRACE] 2440:TaskA:START
+[TRACE] 2442:TaskA:END
+[ 2450 ] PTL_MGR released TaskA
+[TRACE] 2450:TaskA:START
+[TRACE] 2452:TaskA:END
+[ 2460 ] PTL_MGR released TaskA
+[TRACE] 2460:TaskA:START
+[TRACE] 2462:TaskA:END
+[ 2470 ] PTL_MGR released TaskA
+[TRACE] 2470:TaskA:START
+[TRACE] 2472:TaskA:END
+[ 2480 ] PTL_MGR released TaskA
+[TRACE] 2480:TaskA:START
+[TRACE] 2482:TaskA:END
+[ 2490 ] PTL_MGR released TaskA
+[TRACE] 2490:TaskA:START
+[TRACE] 2492:TaskA:END
+[ 2500 ] PTL_MGR released TaskA
+[TRACE] 2500:TaskA:START
+[TRACE] 2502:TaskA:END
+[ 2510 ] PTL_MGR released TaskA
+[TRACE] 2510:TaskA:START
+[TRACE] 2512:TaskA:END
+[ 2520 ] PTL_MGR released TaskA
+[TRACE] 2520:TaskA:START
+[TRACE] 2522:TaskA:END
+[ 2530 ] PTL_MGR released TaskA
+[TRACE] 2530:TaskA:START
+[TRACE] 2532:TaskA:END
+[ 2540 ] PTL_MGR released TaskA
+[TRACE] 2540:TaskA:START
+[TRACE] 2542:TaskA:END
+[ 2550 ] PTL_MGR released TaskA
+[TRACE] 2550:TaskA:START
+[TRACE] 2552:TaskA:END
+[ 2560 ] PTL_MGR released TaskA
+[TRACE] 2560:TaskA:START
+[TRACE] 2562:TaskA:END
+[ 2570 ] PTL_MGR released TaskA
+[TRACE] 2570:TaskA:START
+[TRACE] 2572:TaskA:END
+[ 2580 ] PTL_MGR released TaskA
+[TRACE] 2580:TaskA:START
+[TRACE] 2582:TaskA:END
+[ 2590 ] PTL_MGR released TaskA
+[TRACE] 2590:TaskA:START
+[TRACE] 2592:TaskA:END
+[ 2600 ] PTL_MGR released TaskA
+[TRACE] 2600:TaskA:START
+[TRACE] 2602:TaskA:END
+[ 2610 ] PTL_MGR released TaskA
+[TRACE] 2610:TaskA:START
+[TRACE] 2612:TaskA:END
+[ 2620 ] PTL_MGR released TaskA
+[TRACE] 2620:TaskA:START
+[TRACE] 2622:TaskA:END
+[ 2630 ] PTL_MGR released TaskA
+[TRACE] 2630:TaskA:START
+[TRACE] 2632:TaskA:END
+[ 2640 ] PTL_MGR released TaskA
+[TRACE] 2640:TaskA:START
+[TRACE] 2642:TaskA:END
+[ 2650 ] PTL_MGR released TaskA
+[TRACE] 2650:TaskA:START
+[TRACE] 2652:TaskA:END
+[ 2660 ] PTL_MGR released TaskA
+[TRACE] 2660:TaskA:START
+[TRACE] 2662:TaskA:END
+[ 2670 ] PTL_MGR released TaskA
+[TRACE] 2670:TaskA:START
+[TRACE] 2672:TaskA:END
+[ 2680 ] PTL_MGR released TaskA
+[TRACE] 2680:TaskA:START
+[TRACE] 2682:TaskA:END
+[ 2690 ] PTL_MGR released TaskA
+[TRACE] 2690:TaskA:START
+[TRACE] 2692:TaskA:END
+[ 2700 ] PTL_MGR released TaskA
+[TRACE] 2700:TaskA:START
+[TRACE] 2702:TaskA:END
+[ 2710 ] PTL_MGR released TaskA
+[TRACE] 2710:TaskA:START
+[TRACE] 2712:TaskA:END
+[ 2720 ] PTL_MGR released TaskA
+[TRACE] 2720:TaskA:START
+[TRACE] 2722:TaskA:END
+[ 2730 ] PTL_MGR released TaskA
+[TRACE] 2730:TaskA:START
+[TRACE] 2732:TaskA:END
+[ 2740 ] PTL_MGR released TaskA
+[TRACE] 2740:TaskA:START
+[TRACE] 2742:TaskA:END
+[ 2750 ] PTL_MGR released TaskA
+[TRACE] 2750:TaskA:START
+[TRACE] 2752:TaskA:END
+[ 2760 ] PTL_MGR released TaskA
+[TRACE] 2760:TaskA:START
+[TRACE] 2762:TaskA:END
+[ 2770 ] PTL_MGR released TaskA
+[TRACE] 2770:TaskA:START
+[TRACE] 2772:TaskA:END
+[ 2780 ] PTL_MGR released TaskA
+[TRACE] 2780:TaskA:START
+[TRACE] 2782:TaskA:END
+[ 2790 ] PTL_MGR released TaskA
+[TRACE] 2790:TaskA:START
+[TRACE] 2792:TaskA:END
+[ 2800 ] PTL_MGR released TaskA
+[TRACE] 2800:TaskA:START
+[TRACE] 2802:TaskA:END
+[ 2810 ] PTL_MGR released TaskA
+[TRACE] 2810:TaskA:START
+[TRACE] 2812:TaskA:END
+[ 2820 ] PTL_MGR released TaskA
+[TRACE] 2820:TaskA:START
+[TRACE] 2822:TaskA:END
+[ 2830 ] PTL_MGR released TaskA
+[TRACE] 2830:TaskA:START
+[TRACE] 2832:TaskA:END
+[ 2840 ] PTL_MGR released TaskA
+[TRACE] 2840:TaskA:START
+[TRACE] 2842:TaskA:END
+[ 2850 ] PTL_MGR released TaskA
+[TRACE] 2850:TaskA:START
+[TRACE] 2852:TaskA:END
+[ 2860 ] PTL_MGR released TaskA
+[TRACE] 2860:TaskA:START
+[TRACE] 2862:TaskA:END
+[ 2870 ] PTL_MGR released TaskA
+[TRACE] 2870:TaskA:START
+[TRACE] 2872:TaskA:END
+[ 2880 ] PTL_MGR released TaskA
+[TRACE] 2880:TaskA:START
+[TRACE] 2882:TaskA:END
+[ 2890 ] PTL_MGR released TaskA
+[TRACE] 2890:TaskA:START
+[TRACE] 2892:TaskA:END
+[ 2900 ] PTL_MGR released TaskA
+[TRACE] 2900:TaskA:START
+[TRACE] 2902:TaskA:END
+[ 2910 ] PTL_MGR released TaskA
+[TRACE] 2910:TaskA:START
+[TRACE] 2912:TaskA:END
+[ 2920 ] PTL_MGR released TaskA
+[TRACE] 2920:TaskA:START
+[TRACE] 2922:TaskA:END
+[ 2930 ] PTL_MGR released TaskA
+[TRACE] 2930:TaskA:START
+[TRACE] 2932:TaskA:END
+[ 2940 ] PTL_MGR released TaskA
+[TRACE] 2940:TaskA:START
+[TRACE] 2942:TaskA:END
+[ 2950 ] PTL_MGR released TaskA
+[TRACE] 2950:TaskA:START
+[TRACE] 2952:TaskA:END
+[ 2960 ] PTL_MGR released TaskA
+[TRACE] 2960:TaskA:START
+[TRACE] 2962:TaskA:END
+[ 2970 ] PTL_MGR released TaskA
+[TRACE] 2970:TaskA:START
+[TRACE] 2972:TaskA:END
+[ 2980 ] PTL_MGR released TaskA
+[TRACE] 2980:TaskA:START
+[TRACE] 2982:TaskA:END
+[ 2990 ] PTL_MGR released TaskA
+[TRACE] 2990:TaskA:START
+[TRACE] 2992:TaskA:END
+[ 3000 ] PTL_MGR released TaskA
+[TRACE] 3000:TaskA:START
+[TRACE] 3002:TaskA:END
+[ 3010 ] PTL_MGR released TaskA
+[TRACE] 3010:TaskA:START
+[TRACE] 3012:TaskA:END
+[ 3020 ] PTL_MGR released TaskA
+[TRACE] 3020:TaskA:START
+[TRACE] 3022:TaskA:END
+[ 3030 ] PTL_MGR released TaskA
+[TRACE] 3030:TaskA:START
+[TRACE] 3032:TaskA:END
+[ 3040 ] PTL_MGR released TaskA
+[TRACE] 3040:TaskA:START
+[TRACE] 3042:TaskA:END
+[ 3050 ] PTL_MGR released TaskA
+[TRACE] 3050:TaskA:START
+[TRACE] 3052:TaskA:END
+[ 3060 ] PTL_MGR released TaskA
+[TRACE] 3060:TaskA:START
+[TRACE] 3062:TaskA:END
+[ 3070 ] PTL_MGR released TaskA
+[TRACE] 3070:TaskA:START
+[TRACE] 3072:TaskA:END
+[ 3080 ] PTL_MGR released TaskA
+[TRACE] 3080:TaskA:START
+[TRACE] 3082:TaskA:END
+[ 3090 ] PTL_MGR released TaskA
+[TRACE] 3090:TaskA:START
+[TRACE] 3092:TaskA:END
+[ 3100 ] PTL_MGR released TaskA
+[TRACE] 3100:TaskA:START
+[TRACE] 3102:TaskA:END
+[ 3110 ] PTL_MGR released TaskA
+[TRACE] 3110:TaskA:START
+[TRACE] 3112:TaskA:END
+[ 3120 ] PTL_MGR released TaskA
+[TRACE] 3120:TaskA:START
+[TRACE] 3122:TaskA:END
+[ 3130 ] PTL_MGR released TaskA
+[TRACE] 3130:TaskA:START
+[TRACE] 3132:TaskA:END
+[ 3140 ] PTL_MGR released TaskA
+[TRACE] 3140:TaskA:START
+[TRACE] 3142:TaskA:END
+[ 3150 ] PTL_MGR released TaskA
+[TRACE] 3150:TaskA:START
+[TRACE] 3152:TaskA:END
+[ 3160 ] PTL_MGR released TaskA
+[TRACE] 3160:TaskA:START
+[TRACE] 3162:TaskA:END
+[ 3170 ] PTL_MGR released TaskA
+[TRACE] 3170:TaskA:START
+[TRACE] 3172:TaskA:END
+[ 3180 ] PTL_MGR released TaskA
+[TRACE] 3180:TaskA:START
+[TRACE] 3182:TaskA:END
+[ 3190 ] PTL_MGR released TaskA
+[TRACE] 3190:TaskA:START
+[TRACE] 3192:TaskA:END
+[ 3200 ] PTL_MGR released TaskA
+[TRACE] 3200:TaskA:START
+[TRACE] 3202:TaskA:END
+[ 3210 ] PTL_MGR released TaskA
+[TRACE] 3210:TaskA:START
+[TRACE] 3212:TaskA:END
+[ 3220 ] PTL_MGR released TaskA
+[TRACE] 3220:TaskA:START
+[TRACE] 3222:TaskA:END
+[ 3230 ] PTL_MGR released TaskA
+[TRACE] 3230:TaskA:START
+[TRACE] 3232:TaskA:END
+[ 3240 ] PTL_MGR released TaskA
+[TRACE] 3240:TaskA:START
+[TRACE] 3242:TaskA:END
+[ 3250 ] PTL_MGR released TaskA
+[TRACE] 3250:TaskA:START
+[TRACE] 3252:TaskA:END
+[ 3260 ] PTL_MGR released TaskA
+[TRACE] 3260:TaskA:START
+[TRACE] 3262:TaskA:END
+[ 3270 ] PTL_MGR released TaskA
+[TRACE] 3270:TaskA:START
+[TRACE] 3272:TaskA:END
+[ 3280 ] PTL_MGR released TaskA
+[TRACE] 3280:TaskA:START
+[TRACE] 3282:TaskA:END
+[ 3290 ] PTL_MGR released TaskA
+[TRACE] 3290:TaskA:START
+[TRACE] 3292:TaskA:END
+[ 3300 ] PTL_MGR released TaskA
+[TRACE] 3300:TaskA:START
+[TRACE] 3302:TaskA:END
+[ 3310 ] PTL_MGR released TaskA
+[TRACE] 3310:TaskA:START
+[TRACE] 3312:TaskA:END
+[ 3320 ] PTL_MGR released TaskA
+[TRACE] 3320:TaskA:START
+[TRACE] 3322:TaskA:END
+[ 3330 ] PTL_MGR released TaskA
+[TRACE] 3330:TaskA:START
+[TRACE] 3332:TaskA:END
+[ 3340 ] PTL_MGR released TaskA
+[TRACE] 3340:TaskA:START
+[TRACE] 3342:TaskA:END
+[ 3350 ] PTL_MGR released TaskA
+[TRACE] 3350:TaskA:START
+[TRACE] 3352:TaskA:END
+[ 3360 ] PTL_MGR released TaskA
+[TRACE] 3360:TaskA:START
+[TRACE] 3362:TaskA:END
+[ 3370 ] PTL_MGR released TaskA
+[TRACE] 3370:TaskA:START
+[TRACE] 3372:TaskA:END
+[ 3380 ] PTL_MGR released TaskA
+[TRACE] 3380:TaskA:START
+[TRACE] 3382:TaskA:END
+[ 3390 ] PTL_MGR released TaskA
+[TRACE] 3390:TaskA:START
+[TRACE] 3392:TaskA:END
+[ 3400 ] PTL_MGR released TaskA
+[TRACE] 3400:TaskA:START
+[TRACE] 3402:TaskA:END
+[ 3410 ] PTL_MGR released TaskA
+[TRACE] 3410:TaskA:START
+[TRACE] 3412:TaskA:END
+[ 3420 ] PTL_MGR released TaskA
+[TRACE] 3420:TaskA:START
+[TRACE] 3422:TaskA:END
+[ 3430 ] PTL_MGR released TaskA
+[TRACE] 3430:TaskA:START
+[TRACE] 3432:TaskA:END
+[ 3440 ] PTL_MGR released TaskA
+[TRACE] 3440:TaskA:START
+[TRACE] 3442:TaskA:END
+[ 3450 ] PTL_MGR released TaskA
+[TRACE] 3450:TaskA:START
+[TRACE] 3452:TaskA:END
+[ 3460 ] PTL_MGR released TaskA
+[TRACE] 3460:TaskA:START
+[TRACE] 3462:TaskA:END
+[ 3470 ] PTL_MGR released TaskA
+[TRACE] 3470:TaskA:START
+[TRACE] 3472:TaskA:END
+[ 3480 ] PTL_MGR released TaskA
+[TRACE] 3480:TaskA:START
+[TRACE] 3482:TaskA:END
+[ 3490 ] PTL_MGR released TaskA
+[TRACE] 3490:TaskA:START
+[TRACE] 3492:TaskA:END
+[ 3500 ] PTL_MGR released TaskA
+[TRACE] 3500:TaskA:START
+[TRACE] 3502:TaskA:END
+[ 3510 ] PTL_MGR released TaskA
+[TRACE] 3510:TaskA:START
+[TRACE] 3512:TaskA:END
+[ 3520 ] PTL_MGR released TaskA
+[TRACE] 3520:TaskA:START
+[TRACE] 3522:TaskA:END
+[ 3530 ] PTL_MGR released TaskA
+[TRACE] 3530:TaskA:START
+[TRACE] 3532:TaskA:END
+[ 3540 ] PTL_MGR released TaskA
+[TRACE] 3540:TaskA:START
+[TRACE] 3542:TaskA:END
+[ 3550 ] PTL_MGR released TaskA
+[TRACE] 3550:TaskA:START
+[TRACE] 3552:TaskA:END
+[ 3560 ] PTL_MGR released TaskA
+[TRACE] 3560:TaskA:START
+[TRACE] 3562:TaskA:END
+[ 3570 ] PTL_MGR released TaskA
+[TRACE] 3570:TaskA:START
+[TRACE] 3572:TaskA:END
+[ 3580 ] PTL_MGR released TaskA
+[TRACE] 3580:TaskA:START
+[TRACE] 3582:TaskA:END
+[ 3590 ] PTL_MGR released TaskA
+[TRACE] 3590:TaskA:START
+[TRACE] 3592:TaskA:END
+[ 3600 ] PTL_MGR released TaskA
+[TRACE] 3600:TaskA:START
+[TRACE] 3602:TaskA:END
+[ 3610 ] PTL_MGR released TaskA
+[TRACE] 3610:TaskA:START
+[TRACE] 3612:TaskA:END
+[ 3620 ] PTL_MGR released TaskA
+[TRACE] 3620:TaskA:START
+[TRACE] 3622:TaskA:END
+[ 3630 ] PTL_MGR released TaskA
+[TRACE] 3630:TaskA:START
+[TRACE] 3632:TaskA:END
+[ 3640 ] PTL_MGR released TaskA
+[TRACE] 3640:TaskA:START
+[TRACE] 3642:TaskA:END
+[ 3650 ] PTL_MGR released TaskA
+[TRACE] 3650:TaskA:START
+[TRACE] 3652:TaskA:END
+[ 3660 ] PTL_MGR released TaskA
+[TRACE] 3660:TaskA:START
+[TRACE] 3662:TaskA:END
+[ 3670 ] PTL_MGR released TaskA
+[TRACE] 3670:TaskA:START
+[TRACE] 3672:TaskA:END
+[ 3680 ] PTL_MGR released TaskA
+[TRACE] 3680:TaskA:START
+[TRACE] 3682:TaskA:END
+[ 3690 ] PTL_MGR released TaskA
+[TRACE] 3690:TaskA:START
+[TRACE] 3692:TaskA:END
+[ 3700 ] PTL_MGR released TaskA
+[TRACE] 3700:TaskA:START
+[TRACE] 3702:TaskA:END
+[ 3710 ] PTL_MGR released TaskA
+[TRACE] 3710:TaskA:START
+[TRACE] 3712:TaskA:END
+[ 3720 ] PTL_MGR released TaskA
+[TRACE] 3720:TaskA:START
+[TRACE] 3722:TaskA:END
+[ 3730 ] PTL_MGR released TaskA
+[TRACE] 3730:TaskA:START
+[TRACE] 3732:TaskA:END
+[ 3740 ] PTL_MGR released TaskA
+[TRACE] 3740:TaskA:START
+[TRACE] 3742:TaskA:END
+[ 3750 ] PTL_MGR released TaskA
+[TRACE] 3750:TaskA:START
+[TRACE] 3752:TaskA:END
+[ 3760 ] PTL_MGR released TaskA
+[TRACE] 3760:TaskA:START
+[TRACE] 3762:TaskA:END
+[ 3770 ] PTL_MGR released TaskA
+[TRACE] 3770:TaskA:START
+[TRACE] 3772:TaskA:END
+[ 3780 ] PTL_MGR released TaskA
+[TRACE] 3780:TaskA:START
+[TRACE] 3782:TaskA:END
+[ 3790 ] PTL_MGR released TaskA
+[TRACE] 3790:TaskA:START
+[TRACE] 3792:TaskA:END
+[ 3800 ] PTL_MGR released TaskA
+[TRACE] 3800:TaskA:START
+[TRACE] 3802:TaskA:END
+[ 3810 ] PTL_MGR released TaskA
+[TRACE] 3810:TaskA:START
+[TRACE] 3812:TaskA:END
+[ 3820 ] PTL_MGR released TaskA
+[TRACE] 3820:TaskA:START
+[TRACE] 3822:TaskA:END
+[ 3830 ] PTL_MGR released TaskA
+[TRACE] 3830:TaskA:START
+[TRACE] 3832:TaskA:END
+[ 3840 ] PTL_MGR released TaskA
+[TRACE] 3840:TaskA:START
+[TRACE] 3842:TaskA:END
+[ 3850 ] PTL_MGR released TaskA
+[TRACE] 3850:TaskA:START
+[TRACE] 3852:TaskA:END
+[ 3860 ] PTL_MGR released TaskA
+[TRACE] 3860:TaskA:START
+[TRACE] 3862:TaskA:END
+[ 3870 ] PTL_MGR released TaskA
+[TRACE] 3870:TaskA:START
+[TRACE] 3872:TaskA:END
+[ 3880 ] PTL_MGR released TaskA
+[TRACE] 3880:TaskA:START
+[TRACE] 3882:TaskA:END
+[ 3890 ] PTL_MGR released TaskA
+[TRACE] 3890:TaskA:START
+[TRACE] 3892:TaskA:END
+[ 3900 ] PTL_MGR released TaskA
+[TRACE] 3900:TaskA:START
+[TRACE] 3902:TaskA:END
+[ 3910 ] PTL_MGR released TaskA
+[TRACE] 3910:TaskA:START
+[TRACE] 3912:TaskA:END
+[ 3920 ] PTL_MGR released TaskA
+[TRACE] 3920:TaskA:START
+[TRACE] 3922:TaskA:END
+[ 3930 ] PTL_MGR released TaskA
+[TRACE] 3930:TaskA:START
+[TRACE] 3932:TaskA:END
+[ 3940 ] PTL_MGR released TaskA
+[TRACE] 3940:TaskA:START
+[TRACE] 3942:TaskA:END
+[ 3950 ] PTL_MGR released TaskA
+[TRACE] 3950:TaskA:START
+[TRACE] 3952:TaskA:END
+[ 3960 ] PTL_MGR released TaskA
+[TRACE] 3960:TaskA:START
+[TRACE] 3962:TaskA:END
+[ 3970 ] PTL_MGR released TaskA
+[TRACE] 3970:TaskA:START
+qemu-system-arm: terminating on signal 15 from pid 28354 (/bin/bash)

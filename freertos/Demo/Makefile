@@ -32,8 +32,11 @@ INCLUDE_DIRS = -I$(KERNEL_DIR)/include -I$(KERNEL_PORT_DIR) -I$(DEMO_PROJECT)
 VPATH += $(KERNEL_DIR) $(KERNEL_PORT_DIR) $(KERNEL_DIR)/portable/MemMang
 VPATH += $(DEMO_PROJECT)
 
+TEST ?= 5
+
 # Compiler flags
 CFLAGS = $(INCLUDE_DIRS)
+CFLAGS += -DTEST_CASE=$(TEST)
 CFLAGS += -ffreestanding
 CFLAGS += -mcpu=$(CPU) -mthumb
 CFLAGS += -Wall -Wextra -Wshadow

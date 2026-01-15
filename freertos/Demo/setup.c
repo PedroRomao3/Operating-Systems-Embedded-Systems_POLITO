@@ -122,18 +122,18 @@ static void vTaskPeriodicWrapper(void *arg)
     for (;;)
     {
         xSemaphoreTake(p->release_sem, portMAX_DELAY);
-        TASK_LOG(p, "[ %d ] %s start \n", xTaskGetTickCount(), p->name);
+        TASK_LOG(p,"[TRACE] %d:%s:START\n", xTaskGetTickCount(), p->name);
         p->state = JOB_RUNNING;
         p->function(p->arg);
         // TODO: delete this comment later, we didnt have dealine checks on period overrun
         TickType_t now = xTaskGetTickCount();
         if (now > p->abs_deadline)
         {
-            SdkLog("[ %d ] %s DEADLINE MISS \n", now, p->name);
+            SdkLog("[TRACE] %d:%s:MISS\n", now, p->name);
         }
 
         p->state = JOB_IDLE;
-        TASK_LOG(p, "[ %d ] %s complete\n", xTaskGetTickCount(), p->name);
+        TASK_LOG(p,"[TRACE] %d:%s:END\n", xTaskGetTickCount(), p->name);
     }
 }
 

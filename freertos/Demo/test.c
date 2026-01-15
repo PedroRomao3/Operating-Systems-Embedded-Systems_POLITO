@@ -2,7 +2,9 @@
 #include "uart.h"
 #include "setup.h"
 
-#define TEST_CASE 5
+#ifndef TEST_CASE
+    #define TEST_CASE 5
+#endif
 
 static void vBurnCPU(TickType_t ticks_to_wait)
 {
