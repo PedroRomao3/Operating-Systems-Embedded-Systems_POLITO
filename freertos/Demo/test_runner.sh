@@ -1,23 +1,33 @@
 #!/bin/bash
 
 # --- CONFIGURATION ---
-TEST_CASES=(1 2 3 4 5)
-SLEEP_SEC=4  # Increased to 4s to be safe
+TEST_CASES=(1 2 3 4 5 7 8)
+SLEEP_SEC=4
 GOLDEN_DIR="./tests/golden"
 OUTPUT_DIR="./output"
 ELF_FILE="./Output/demo.elf"
 
-QEMU_CMD="qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel $ELF_FILE -monitor none -nographic -serial stdio"
+BASE_QEMU_CMD="qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel $ELF_FILE -monitor none -nographic -serial stdio -semihosting"
 
 mkdir -p $GOLDEN_DIR
 mkdir -p $OUTPUT_DIR
 
 sanitize_log() {
-    sed to rmv time stamp then head to keep first lines only
+    # sed to rmv time stamp then head to keep first lines only
     grep "\[TRACE\]" "$1" | sed 's/\[TRACE\] [0-9]*:/\[TRACE\]:/g' | head -n 30 > "$2"
 }
 
-echo "    STARTING TEST RUN"
+echo "    STARTING FAST TEST RUN"
+
+echo "Compiling Global Binary..."
+rm -f $ELF_FILE
+make cleanobj > /dev/null 2>&1
+make > /dev/null 2>&1 
+
+if [ ! -f "$ELF_FILE" ]; then
+    echo "❌ COMPILE FAILED"
+    exit 1
+fi
 
 fails=0
 
@@ -25,26 +35,18 @@ for T in "${TEST_CASES[@]}"
 do
     echo -n "Test Case $T: "
 
-    make cleanobj > /dev/null 2>&1
-    make TEST=$T > /dev/null 2>&1
-
-    if [ ! -f "$ELF_FILE" ]; then
-        echo "BUILD FAILED"
-        fails=$((fails+1))
-        continue
-    fi
-
-    # Start QEMU in the background (&), redirect output immediately
-    $QEMU_CMD > "$OUTPUT_DIR/raw_$T.log" 2>&1 &
     
-    # Capture the Process ID (PID) of QEMU
+    FULL_CMD="$BASE_QEMU_CMD -semihosting-config enable=on,target=native,arg=TEST=$T"
+
+    # Run QEMU in the background using &
+    $FULL_CMD > "$OUTPUT_DIR/raw_$T.log" 2>&1 &
+    
     QEMU_PID=$!
     
     sleep $SLEEP_SEC
     
-    # Kill QEMU 
     kill $QEMU_PID > /dev/null 2>&1
-    wait $QEMU_PID 2>/dev/null # Suppress "Terminated" message
+    wait $QEMU_PID 2>/dev/null
 
     if [ ! -s "$OUTPUT_DIR/raw_$T.log" ]; then
         echo "⚠️  EMPTY LOG (Still empty?)"
@@ -62,7 +64,6 @@ do
             echo "✅ PASS"
         else
             echo "❌ FAIL"
-            # Show the difference to help debug
             diff -y --suppress-common-lines "$GOLDEN_FILE" "$OUTPUT_DIR/actual_$T.txt" | head -n 5
             fails=$((fails+1))
         fi

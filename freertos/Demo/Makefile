@@ -43,6 +43,7 @@ CFLAGS += -Wall -Wextra -Wshadow
 CFLAGS += -g3
 CFLAGS += -Os
 CFLAGS += -ffunction-sections -fdata-sections
+CFLAGS += -specs=rdimon.specs
 
 # Linker flags
 LDFLAGS = -T ./mps2_m3.ld
@@ -50,6 +51,7 @@ LDFLAGS += -nostartfiles -specs=nano.specs -specs=nosys.specs
 LDFLAGS += -Xlinker -Map=$(MAP)
 LDFLAGS += -Xlinker --gc-sections
 LDFLAGS += -mcpu=$(CPU) -mthumb
+LDFLAGS += -specs=rdimon.specs -lc -lrdimon
 
 # FreeRTOS kernel source files
 SOURCE_FILES += $(KERNEL_DIR)/queue.c
@@ -102,7 +104,7 @@ clean:
 
 # Run QEMU
 qemu_start:
-	qemu-system-arm -machine $(MACHINE) -cpu $(CPU) -kernel $(ELF) -monitor none -nographic -serial stdio
+	qemu-system-arm -machine $(MACHINE) -cpu $(CPU) -kernel $(ELF) -monitor none -nographic -serial stdio -semihosting -semihosting-config enable=on,target=native,arg="arg1=1 arg2=2 arg3=3"
 
 qemu_debug:
 	qemu-system-arm -machine $(MACHINE) -cpu $(CPU) -kernel $(ELF) -monitor none -nographic -serial stdio $(QEMU_FLAGS_DBG)
@@ -110,3 +112,9 @@ qemu_debug:
 # Start GDB
 gdb_start:
 	gdb-multiarch $(ELF)
+
+run:
+	$(MAKE) clean 
+	$(MAKE) all 
+	$(MAKE) qemu_start
+

@@ -184,11 +184,11 @@ void vListProcLaunchNonPeriodic(List_t *NonPeriodicTaskConfigList)
 
 static void vHandleOverrun(TaskDescription_t *p, TickType_t now)
 {
-    SdkLog("[ %d ] %s PERIOD OVERRUN -> Policy %d \n", now, p->name, p->overrun_policy);
+    TASK_LOG(p, "[ %d ] %s PERIOD OVERRUN -> Policy %d \n", now, p->name, p->overrun_policy);
     switch (p->overrun_policy)
     {
     case POLICY_NONE:
-        SdkLog("[ %d ] %s Task has POLICY_NONE which should not be allowed!\n", now, p->name);
+        LogError("[ %d ] %s Task has POLICY_NONE which should not be allowed!\n", now, p->name);
         break;
     case POLICY_SKIP:
         p->last_release += p->period;
@@ -242,7 +242,7 @@ static void vPeriodicReleaseManager(void *arg)
                 }
                 else
                 {
-                    ReleaseLog("PTL_MGR", p->name, now);
+                    TASK_LOG(p, "[ %d ] %s released %s \n", now, "PTL_MGR", p->name);
 
                     p->job_id++;
                     p->last_release = now;

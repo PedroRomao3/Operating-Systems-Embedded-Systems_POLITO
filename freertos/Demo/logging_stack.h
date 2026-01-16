@@ -93,32 +93,32 @@
 #else
     #if LIBRARY_LOG_LEVEL == LOG_DEBUG
         /* All log level messages will logged. */
-        #define LogAlways( ... )    SdkLog( "[ALWAYS] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
-        #define LogError( ... )     SdkLog( "[ERROR] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
-        #define LogWarn( ... )      SdkLog( "[WARN] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
-        #define LogInfo( ... )      SdkLog( "[INFO] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
-        #define LogDebug( ... )     SdkLog( "[DEBUG] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
+        #define LogAlways( ... )    SdkLog( " "LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
+        #define LogError( ... )     SdkLog( " "LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
+        #define LogWarn( ... )      SdkLog( " "LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
+        #define LogInfo( ... )      SdkLog( " "LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
+        #define LogDebug( ... )     SdkLog( "[DEBUG] "LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
 
     #elif LIBRARY_LOG_LEVEL == LOG_INFO
         /* Only INFO, WARNING, ERROR, and ALWAYS messages will be logged. */
-        #define LogAlways( ... )    SdkLog( "[ALWAYS] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
-        #define LogError( ... )     SdkLog( "[ERROR] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
-        #define LogWarn( ... )      SdkLog( "[WARN] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
-        #define LogInfo( ... )      SdkLog( "[INFO] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
+        #define LogAlways( ... )    SdkLog( ""LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
+        #define LogError( ... )     SdkLog( ""LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
+        #define LogWarn( ... )      SdkLog( ""LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
+        #define LogInfo( ... )      SdkLog( ""LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
         #define LogDebug( ... )
 
     #elif LIBRARY_LOG_LEVEL == LOG_WARN
         /* Only WARNING, ERROR, and ALWAYS messages will be logged. */
-        #define LogAlways( ... )    SdkLog( "[ALWAYS] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
-        #define LogError( ... )     SdkLog( "[ERROR] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
-        #define LogWarn( ... )      SdkLog( "[WARN] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
+        #define LogAlways( ... )    SdkLog( ""LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
+        #define LogError( ... )     SdkLog( ""LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
+        #define LogWarn( ... )      SdkLog( ""LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
         #define LogInfo( ... )
         #define LogDebug( ... )
 
     #elif LIBRARY_LOG_LEVEL == LOG_ERROR
         /* Only ERROR and ALWAYS messages will be logged. */
-        #define LogAlways( ... )    SdkLog( "[ALWAYS] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
-        #define LogError( ... )     SdkLog( "[ERROR] [%s] "LOG_METADATA_FORMAT, LIBRARY_LOG_NAME, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "\r\n" )
+        #define LogAlways( ... )    SdkLog( ""LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
+        #define LogError( ... )     SdkLog( ""LOG_METADATA_FORMAT, LOG_METADATA_ARGS ); SdkLog( __VA_ARGS__ ); SdkLog( "" )
         #define LogWarn( ... )
         #define LogInfo( ... )
         #define LogDebug( ... )
