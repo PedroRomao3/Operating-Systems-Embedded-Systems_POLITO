@@ -20,6 +20,21 @@ static void TaskGeneric(void *arg)
     vBurnCPU(duration);
 }
 
+static void TaskBursty(void *arg)
+{
+    static int cycle_count = 0;
+    cycle_count++;
+
+    if ((cycle_count % 10) == 0)
+    {
+        vBurnCPU(pdMS_TO_TICKS(15));
+    }
+    else
+    {
+        vBurnCPU(pdMS_TO_TICKS(1));
+    }
+}
+
 bool InitTesting(SchedulerConfig_t *testConfiguration, List_t *periodicTaskConfigList, List_t *nonPeriodicTaskConfigList)
 {
     if (testConfiguration == NULL)
@@ -235,6 +250,33 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList)
         TaskConfiguration_t tasks[] = {
             {"TaskCatch", TaskGeneric, (void *)pdMS_TO_TICKS(150),
              512, 1, pdMS_TO_TICKS(100), pdMS_TO_TICKS(100), TRACE_ENABLED, POLICY_CATCH_UP}};
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_CATCH_UP,
+            .tasks = tasks,
+            .num_tasks = 1,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
+    if (RUNTIME_TEST_CASE == 19)
+    {
+        UART_printf("\n[TEST 19] Sporadic Overload (Catch Up)\n");
+
+        /* Scenario:
+         * Period: 10ms.
+         * Normal Load: 1ms.
+         * Burst Load: 15ms (Every 10th cycle).
+         * Policy: CATCH_UP.
+         *
+         * PREDICTION:
+         * Cycles 1-9: Normal (Start T=0, 10, 20...).
+         * Cycle 10:   Start T=90. Ends T=105. (OVERRUN at T=100).
+         * Cycle 11:   Start T=105 (Immediately!). Ends T=106. (Late start, but fast finish).
+         * Cycle 12:   Start T=110. (Back on Schedule!).
+         */
+        TaskConfiguration_t tasks[] = {
+            {"TaskBursty", TaskBursty, NULL, 512, 1, 10, 10, TRACE_ENABLED, POLICY_CATCH_UP}};
 
         SchedulerConfig_t config = {
             .policy = POLICY_CATCH_UP,
