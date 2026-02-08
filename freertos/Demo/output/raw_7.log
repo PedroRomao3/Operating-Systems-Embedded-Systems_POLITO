@@ -1,104 +1,104 @@
 Running Test Case: 7
 
-[TEST 7] Deadline Miss (Not Overrun)
+[TEST 7] Overrun Policy Skip
 [ 0 ] PTL_MGR released TaskMiss 
 [TRACE] 0:TaskMiss:START
-[ 100 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 100:TaskMiss:OVERRUN Policy:1
 [TRACE] 150:TaskMiss:MISS
 [TRACE] 150:TaskMiss:END
 [ 200 ] PTL_MGR released TaskMiss 
 [TRACE] 200:TaskMiss:START
-[ 300 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 300:TaskMiss:OVERRUN Policy:1
 [TRACE] 350:TaskMiss:MISS
 [TRACE] 350:TaskMiss:END
 [ 400 ] PTL_MGR released TaskMiss 
 [TRACE] 400:TaskMiss:START
-[ 500 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 500:TaskMiss:OVERRUN Policy:1
 [TRACE] 550:TaskMiss:MISS
 [TRACE] 550:TaskMiss:END
 [ 600 ] PTL_MGR released TaskMiss 
 [TRACE] 600:TaskMiss:START
-[ 700 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 700:TaskMiss:OVERRUN Policy:1
 [TRACE] 750:TaskMiss:MISS
 [TRACE] 750:TaskMiss:END
 [ 800 ] PTL_MGR released TaskMiss 
 [TRACE] 800:TaskMiss:START
-[ 900 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 900:TaskMiss:OVERRUN Policy:1
 [TRACE] 950:TaskMiss:MISS
 [TRACE] 950:TaskMiss:END
 [ 1000 ] PTL_MGR released TaskMiss 
 [TRACE] 1000:TaskMiss:START
-[ 1100 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 1100:TaskMiss:OVERRUN Policy:1
 [TRACE] 1150:TaskMiss:MISS
 [TRACE] 1150:TaskMiss:END
 [ 1200 ] PTL_MGR released TaskMiss 
 [TRACE] 1200:TaskMiss:START
-[ 1300 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 1300:TaskMiss:OVERRUN Policy:1
 [TRACE] 1350:TaskMiss:MISS
 [TRACE] 1350:TaskMiss:END
 [ 1400 ] PTL_MGR released TaskMiss 
 [TRACE] 1400:TaskMiss:START
-[ 1500 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 1500:TaskMiss:OVERRUN Policy:1
 [TRACE] 1550:TaskMiss:MISS
 [TRACE] 1550:TaskMiss:END
 [ 1600 ] PTL_MGR released TaskMiss 
 [TRACE] 1600:TaskMiss:START
-[ 1700 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 1700:TaskMiss:OVERRUN Policy:1
 [TRACE] 1750:TaskMiss:MISS
 [TRACE] 1750:TaskMiss:END
 [ 1800 ] PTL_MGR released TaskMiss 
 [TRACE] 1800:TaskMiss:START
-[ 1900 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 1900:TaskMiss:OVERRUN Policy:1
 [TRACE] 1950:TaskMiss:MISS
 [TRACE] 1950:TaskMiss:END
 [ 2000 ] PTL_MGR released TaskMiss 
 [TRACE] 2000:TaskMiss:START
-[ 2100 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 2100:TaskMiss:OVERRUN Policy:1
 [TRACE] 2150:TaskMiss:MISS
 [TRACE] 2150:TaskMiss:END
 [ 2200 ] PTL_MGR released TaskMiss 
 [TRACE] 2200:TaskMiss:START
-[ 2300 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 2300:TaskMiss:OVERRUN Policy:1
 [TRACE] 2350:TaskMiss:MISS
 [TRACE] 2350:TaskMiss:END
 [ 2400 ] PTL_MGR released TaskMiss 
 [TRACE] 2400:TaskMiss:START
-[ 2500 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 2500:TaskMiss:OVERRUN Policy:1
 [TRACE] 2550:TaskMiss:MISS
 [TRACE] 2550:TaskMiss:END
 [ 2600 ] PTL_MGR released TaskMiss 
 [TRACE] 2600:TaskMiss:START
-[ 2700 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 2700:TaskMiss:OVERRUN Policy:1
 [TRACE] 2750:TaskMiss:MISS
 [TRACE] 2750:TaskMiss:END
 [ 2800 ] PTL_MGR released TaskMiss 
 [TRACE] 2800:TaskMiss:START
-[ 2900 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 2900:TaskMiss:OVERRUN Policy:1
 [TRACE] 2950:TaskMiss:MISS
 [TRACE] 2950:TaskMiss:END
 [ 3000 ] PTL_MGR released TaskMiss 
 [TRACE] 3000:TaskMiss:START
-[ 3100 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 3100:TaskMiss:OVERRUN Policy:1
 [TRACE] 3150:TaskMiss:MISS
 [TRACE] 3150:TaskMiss:END
 [ 3200 ] PTL_MGR released TaskMiss 
 [TRACE] 3200:TaskMiss:START
-[ 3300 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 3300:TaskMiss:OVERRUN Policy:1
 [TRACE] 3350:TaskMiss:MISS
 [TRACE] 3350:TaskMiss:END
 [ 3400 ] PTL_MGR released TaskMiss 
 [TRACE] 3400:TaskMiss:START
-[ 3500 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 3500:TaskMiss:OVERRUN Policy:1
 [TRACE] 3550:TaskMiss:MISS
 [TRACE] 3550:TaskMiss:END
 [ 3600 ] PTL_MGR released TaskMiss 
 [TRACE] 3600:TaskMiss:START
-[ 3700 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 3700:TaskMiss:OVERRUN Policy:1
 [TRACE] 3750:TaskMiss:MISS
 [TRACE] 3750:TaskMiss:END
 [ 3800 ] PTL_MGR released TaskMiss 
 [TRACE] 3800:TaskMiss:START
-[ 3900 ] TaskMiss PERIOD OVERRUN -> Policy 1 
+[TRACE] 3900:TaskMiss:OVERRUN Policy:1
 [TRACE] 3950:TaskMiss:MISS
 [TRACE] 3950:TaskMiss:END
-qemu-system-arm: terminating on signal 15 from pid 25821 (/bin/bash)
+qemu-system-arm: terminating on signal 15 from pid 21352 (/bin/bash)

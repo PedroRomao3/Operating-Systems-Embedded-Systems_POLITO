@@ -1197,4 +1197,4 @@ Running Test Case: 1
 [TRACE] 3972:TaskA:END
 [ 3980 ] PTL_MGR released TaskA 
 [TRACE] 3980:TaskA:START
-qemu-system-arm: terminating on signal 15 from pid 25821 (/bin/bash)
+qemu-system-arm: terminating on signal 15 from pid 21352 (/bin/bash)

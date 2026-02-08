@@ -67,7 +67,16 @@ TaskDescription_t *vTaskProcessesCreate(const char *name,
     p->type = is_periodic ? PTask : NPTask;
 
     p->period = period;
-    p->deadline = (deadline == 0) ? period : deadline;
+    if (deadline == 0)
+    {
+        p->deadline = period;
+        //0 to satisfy regex
+        SdkLog("[TRACE] 0:%s:Config: Defaulting Deadline to Period\n", name);
+    }
+    else
+    {
+        p->deadline = deadline;
+    }
     p->overrun_policy = policy;
     p->trace_enabled = trace_enabled;
 
@@ -183,7 +192,7 @@ void vListProcLaunchNonPeriodic(List_t *NonPeriodicTaskConfigList)
 
 static void vHandleOverrun(TaskDescription_t *p, TickType_t now)
 {
-    TASK_LOG(p, "[ %d ] %s PERIOD OVERRUN -> Policy %d \n", now, p->name, p->overrun_policy);
+    TASK_LOG(p, "[TRACE] %d:%s:OVERRUN Policy:%d\n", now, p->name, p->overrun_policy);
     switch (p->overrun_policy)
     {
     case POLICY_NONE:

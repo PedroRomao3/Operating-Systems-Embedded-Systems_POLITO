@@ -159,13 +159,35 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList)
         InitTesting(&config, PeriodicList, NonPeriodicList);
     }
 
+    if (RUNTIME_TEST_CASE == 6)
+    {
+        UART_printf("\n[TEST 6] Default Config (D=0 -> D=T)\n");
+
+        /* Scenario:
+         * Period = 10ms. Deadline explicitly set to 0.
+         * Work = 9ms.
+         * Expectation: System treats D=T (10ms).
+         * Result: 9ms < 10ms -> Success (End of Job).
+         */
+        TaskConfiguration_t tasks[] = {
+            {"TaskDefault", TaskGeneric, (void *)pdMS_TO_TICKS(9), 512, 1, 10, 0, TRACE_ENABLED, POLICY_SKIP}};
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 1,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
+
     if (RUNTIME_TEST_CASE == 7)
     {
-        UART_printf("\n[TEST 7] Deadline Miss (Not Overrun)\n");
+        UART_printf("\n[TEST 7] Overrun Policy Skip\n");
 
         TaskConfiguration_t tasks[] = {
             {"TaskMiss", TaskGeneric, (void *)pdMS_TO_TICKS(150),
-             512, 1, pdMS_TO_TICKS(100), pdMS_TO_TICKS(100), TRACE_ENABLED, POLICY_SKIP}};
+             512, 1, pdMS_TO_TICKS(100), pdMS_TO_TICKS(100), TRACE_ENABLED, POLICY_NONE}};
 
         SchedulerConfig_t config = {
             .policy = POLICY_SKIP,
@@ -177,11 +199,42 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList)
 
     if (RUNTIME_TEST_CASE == 8)
     {
-        UART_printf("\n[TEST 8] Deadline Miss (Not Overrun)\n");
+        UART_printf("\n[TEST 8] Overrun Policy KILL\n");
 
+        /* Scenario:
+         * Work (150) > Period (100). Policy = KILL.
+         * Expectation: At T=100, Task is Killed. New Task Starts immediately.
+         * Log should show: START ... (No END) ... START
+         */
         TaskConfiguration_t tasks[] = {
-            {"TaskMiss", TaskGeneric, (void *)pdMS_TO_TICKS(150),
-             512, 1, pdMS_TO_TICKS(100), pdMS_TO_TICKS(100), TRACE_ENABLED, POLICY_SKIP}};
+            {"TaskKill", TaskGeneric, (void *)pdMS_TO_TICKS(150),
+             512, 1, pdMS_TO_TICKS(100), pdMS_TO_TICKS(100), TRACE_ENABLED, POLICY_KILL}
+            // Explicitly set to KILL to match the test intent
+        };
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_KILL,
+            .tasks = tasks,
+            .num_tasks = 1,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
+
+    if (RUNTIME_TEST_CASE == 9)
+    {
+        UART_printf("\n[TEST 9] Overrun Policy CATCH_UP\n");
+
+        /* Scenario:
+         * Work (150) > Period (100). Policy = CATCH_UP.
+         * Expectation:
+         * T=0: Start Job 1.
+         * T=100: Overrun detected. Next Release scheduled (Semaphore Given).
+         * T=150: Job 1 Finishes. Job 2 Starts IMMEDIATELY (Catching up).
+         */
+        TaskConfiguration_t tasks[] = {
+            {"TaskCatch", TaskGeneric, (void *)pdMS_TO_TICKS(150),
+             512, 1, pdMS_TO_TICKS(100), pdMS_TO_TICKS(100), TRACE_ENABLED, POLICY_CATCH_UP}};
 
         SchedulerConfig_t config = {
             .policy = POLICY_CATCH_UP,

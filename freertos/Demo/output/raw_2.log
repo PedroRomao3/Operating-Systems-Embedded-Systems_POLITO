@@ -1737,10 +1737,10 @@ Running Test Case: 2
 [TRACE] 2883:TaskB:END
 [ 2890 ] PTL_MGR released TaskA 
 [ 2890 ] PTL_MGR released TaskB 
-[TRACE] 2890:TaskA:START
-[TRACE] 2891:TaskB:START
-[TRACE] 2892:TaskA:END
-[TRACE] 2893:TaskB:END
+[TRACE] 2891:TaskA:START
+[TRACE] 2892:TaskB:START
+[TRACE] 2894:TaskA:END
+[TRACE] 2895:TaskB:END
 [ 2900 ] PTL_MGR released TaskA 
 [ 2900 ] PTL_MGR released TaskB 
 [TRACE] 2900:TaskA:START
@@ -2389,8 +2389,4 @@ Running Test Case: 2
 [TRACE] 3971:TaskB:START
 [TRACE] 3972:TaskA:END
 [TRACE] 3973:TaskB:END
-[ 3980 ] PTL_MGR released TaskA 
-[ 3980 ] PTL_MGR released TaskB 
-[TRACE] 3980:TaskA:START
-[TRACE] 3981:TaskB:START
-qemu-system-arm: terminating on signal 15 from pid 25821 (/bin/bash)
+qemu-system-arm: terminating on signal 15 from pid 21352 (/bin/bash)

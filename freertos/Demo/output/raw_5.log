@@ -440,7 +440,7 @@ Running Test Case: 5
 [ 2180 ] PTL_MGR released TaskMiss 
 [TRACE] 2180:TaskMiss:START
 [TRACE] 2195:TaskMiss:MISS
-[TRACE] 2196:TaskMiss:END
+[TRACE] 2195:TaskMiss:END
 [ 2200 ] PTL_MGR released TaskMiss 
 [TRACE] 2200:TaskMiss:START
 [TRACE] 2215:TaskMiss:MISS
@@ -795,6 +795,4 @@ Running Test Case: 5
 [TRACE] 3955:TaskMiss:END
 [ 3960 ] PTL_MGR released TaskMiss 
 [TRACE] 3960:TaskMiss:START
-[TRACE] 3975:TaskMiss:MISS
-[TRACE] 3975:TaskMiss:END
-qemu-system-arm: terminating on signal 15 from pid 25821 (/bin/bash)
+qemu-system-arm: terminating on signal 15 from pid 21352 (/bin/bash)
