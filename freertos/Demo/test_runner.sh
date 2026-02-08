@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # --- CONFIGURATION ---
-TEST_CASES=(1 2 3 4 5 6 7 8 9 19)
-# TEST_CASES=(19)
+TEST_CASES=(1 2 3 4 5 6 7 8 9 19 21)
+# TEST_CASES=(21)
 SLEEP_SEC=4
 GOLDEN_DIR="./tests/golden"
 OUTPUT_DIR="./output"

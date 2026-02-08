@@ -286,6 +286,51 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList)
 
         InitTesting(&config, PeriodicList, NonPeriodicList);
     }
+
+    if (RUNTIME_TEST_CASE == 21)
+    {
+        UART_printf("\n[TEST 21] Stress Test (U = 85.1%%)\n");
+        UART_printf("Tasks: Emergency(Highest), T1, T2(Early Deadline), T3(Lowest)\n");
+
+        TaskConfiguration_t tasks[] = {
+            /* 1. Emergency (Modeled as Worst-Case Periodic)
+             * T = 50ms (Min Inter-arrival time)
+             * C = 5ms
+             * Prio = 4 (Highest, because Shortest Period)
+             */
+            {"Emergency", TaskGeneric, (void *)pdMS_TO_TICKS(5), 512, 4, 50, 50, TRACE_ENABLED, POLICY_SKIP},
+
+            /* 2. Tau 1
+             * T = 100ms
+             * C = 20ms
+             * Prio = 3
+             */
+            {"Tau1", TaskGeneric, (void *)pdMS_TO_TICKS(20), 512, 3, 100, 100, TRACE_ENABLED, POLICY_SKIP},
+
+            /* 3. Tau 2 (Strict Deadline)
+             * T = 150ms
+             * C = 40ms
+             * D = 130ms (Must finish 20ms before period ends)
+             * Prio = 2
+             */
+            {"Tau2", TaskGeneric, (void *)pdMS_TO_TICKS(40), 512, 2, 150, 130, TRACE_ENABLED, POLICY_SKIP},
+
+            /* 4. Tau 3 (The Heavy Load)
+             * T = 350ms
+             * C = 100ms
+             * Prio = 1 (Lowest)
+             */
+            {"Tau3", TaskGeneric, (void *)pdMS_TO_TICKS(100), 512, 1, 350, 350, TRACE_ENABLED, POLICY_SKIP}
+        };
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 4,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
 }
 
 static inline int semihosting_call(int reason, void *arg)
