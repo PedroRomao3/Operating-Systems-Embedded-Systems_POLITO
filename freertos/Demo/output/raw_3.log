@@ -3,10 +3,10 @@ Running Test Case: 3
 [TEST 3] Preemption
 [ 0 ] PTL_MGR released TaskA 
 [ 0 ] PTL_MGR released TaskB 
-[TRACE] 1:TaskA:START
-[TRACE] 3:TaskA:END
-[TRACE] 3:TaskB:START
-[TRACE] 5:TaskB:END
+[TRACE] 0:TaskA:START
+[TRACE] 2:TaskA:END
+[TRACE] 2:TaskB:START
+[TRACE] 4:TaskB:END
 [ 10 ] PTL_MGR released TaskA 
 [ 10 ] PTL_MGR released TaskB 
 [TRACE] 10:TaskA:START
@@ -1479,10 +1479,10 @@ Running Test Case: 3
 [TRACE] 2454:TaskB:END
 [ 2460 ] PTL_MGR released TaskA 
 [ 2460 ] PTL_MGR released TaskB 
-[TRACE] 2460:TaskA:START
-[TRACE] 2462:TaskA:END
-[TRACE] 2462:TaskB:START
-[TRACE] 2464:TaskB:END
+[TRACE] 2461:TaskA:START
+[TRACE] 2463:TaskA:END
+[TRACE] 2463:TaskB:START
+[TRACE] 2465:TaskB:END
 [ 2470 ] PTL_MGR released TaskA 
 [ 2470 ] PTL_MGR released TaskB 
 [TRACE] 2470:TaskA:START
@@ -1755,10 +1755,10 @@ Running Test Case: 3
 [TRACE] 2914:TaskB:END
 [ 2920 ] PTL_MGR released TaskA 
 [ 2920 ] PTL_MGR released TaskB 
-[TRACE] 2921:TaskA:START
-[TRACE] 2924:TaskA:END
-[TRACE] 2924:TaskB:START
-[TRACE] 2926:TaskB:END
+[TRACE] 2920:TaskA:START
+[TRACE] 2922:TaskA:END
+[TRACE] 2922:TaskB:START
+[TRACE] 2924:TaskB:END
 [ 2930 ] PTL_MGR released TaskA 
 [ 2930 ] PTL_MGR released TaskB 
 [TRACE] 2930:TaskA:START
@@ -2377,4 +2377,15 @@ Running Test Case: 3
 [TRACE] 3952:TaskA:END
 [TRACE] 3952:TaskB:START
 [TRACE] 3954:TaskB:END
-qemu-system-arm: terminating on signal 15 from pid 31205 (/bin/bash)
+[ 3960 ] PTL_MGR released TaskA 
+[ 3960 ] PTL_MGR released TaskB 
+[TRACE] 3960:TaskA:START
+[TRACE] 3962:TaskA:END
+[TRACE] 3962:TaskB:START
+[TRACE] 3964:TaskB:END
+[ 3970 ] PTL_MGR released TaskA 
+[ 3970 ] PTL_MGR released TaskB 
+[TRACE] 3970:TaskA:START
+[TRACE] 3972:TaskA:END
+[TRACE] 3972:TaskB:START
+qemu-system-arm: terminating on signal 15 from pid 25147 (/bin/bash)

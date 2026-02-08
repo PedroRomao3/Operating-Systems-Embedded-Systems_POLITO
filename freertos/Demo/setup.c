@@ -122,10 +122,9 @@ static void vTaskPeriodicWrapper(void *arg)
     for (;;)
     {
         xSemaphoreTake(p->release_sem, portMAX_DELAY);
-        TASK_LOG(p,"[TRACE] %d:%s:START\n", xTaskGetTickCount(), p->name);
+        TASK_LOG(p, "[TRACE] %d:%s:START\n", xTaskGetTickCount(), p->name);
         p->state = JOB_RUNNING;
         p->function(p->arg);
-        // TODO: delete this comment later, we didnt have dealine checks on period overrun
         TickType_t now = xTaskGetTickCount();
         if (now > p->abs_deadline)
         {
@@ -133,7 +132,7 @@ static void vTaskPeriodicWrapper(void *arg)
         }
 
         p->state = JOB_IDLE;
-        TASK_LOG(p,"[TRACE] %d:%s:END\n", xTaskGetTickCount(), p->name);
+        TASK_LOG(p, "[TRACE] %d:%s:END\n", xTaskGetTickCount(), p->name);
     }
 }
 
@@ -198,7 +197,7 @@ static void vHandleOverrun(TaskDescription_t *p, TickType_t now)
 
         xTaskCreate(vTaskPeriodicWrapper,
                     p->name,
-                    512,
+                    p->stack_size,
                     p,
                     p->priority,
                     &p->handle);
@@ -209,8 +208,31 @@ static void vHandleOverrun(TaskDescription_t *p, TickType_t now)
 
     case POLICY_CATCH_UP:
         p->job_id++;
-        p->last_release = now;
-        p->abs_deadline = now + p->deadline;
+
+        /* FIX: PREVENT PERMANENT SCHEDULE DRIFT
+         * If we do: p->last_release = now;
+         * Assuming we start at 0 with T=10, if an overrun makes us arrive at T=11,
+         * the new schedule becomes 11 - 21 - 31... instead of 10 - 20 - 30...
+         * This means we permanently "accept" the delay and shift the whole timeline.
+         * By doing += period, we stay locked to the original grid.
+         */
+        p->last_release += p->period;
+
+        /* NOTE ON "JOB SWAPPING" vs "SERIALIZED CATCH-UP":
+         * pausing the current Job A (K) to release Job B (K+1)
+         * and resuming A later is not feasible or logical here:
+         * * 1. TECHNICAL: TaskDescription_t has one handle/stack. Resuming exactly
+         * where a task stopped requires a "Task Pool" or stack-cloning which
+         * isn't supported by the current architecture.
+         * * 2. LOGICAL: In the real world, stopping a task mid-way (e.g., after reading
+         * a sensor but before outputting the result) makes little sense. Outputting
+         * that "stale" value later is often dangerous or useless.
+         * * 3. THE SOLUTION: We "Release Immediately" by giving the semaphore now.
+         * The late Job K finishes cleanly, then immediately takes the pending
+         * semaphore to start Job K+1. This is still a Catch-Up policy.
+         */
+
+        p->abs_deadline = p->last_release + p->deadline;
         xSemaphoreGive(p->release_sem);
         vTaskResume(p->handle);
         break;
@@ -242,11 +264,12 @@ static void vPeriodicReleaseManager(void *arg)
                 }
                 else
                 {
+                    // even if max priority ISR still higher priority, also critical zones stop interrupts that laos could cause delay
                     TASK_LOG(p, "[ %d ] %s released %s \n", now, "PTL_MGR", p->name);
 
                     p->job_id++;
-                    p->last_release = now;
-                    p->abs_deadline = now + p->deadline;
+                    p->last_release += p->period; // changed this, the explanation is the same as in catchup_policy code, delays still occur here (eg ISR)
+                    p->abs_deadline = p->last_release + p->deadline;
                     xSemaphoreGive(p->release_sem);
                     vTaskResume(p->handle);
                 }

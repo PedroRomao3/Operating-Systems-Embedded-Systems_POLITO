@@ -4,6 +4,8 @@
 #include "setup.h"
 
 #define TRACE_ENABLED true
+#define SYS_GET_CMDLINE 0x15
+#define CMDLINE_MAX 128
 
 typedef struct TaskConfiguration_s
 {
@@ -48,10 +50,10 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList);
 
 const char *get_cmdline(void);
 
-void read_file(char* file_name);
-void write_file(char* file_name, char* output);
+void read_file(char *file_name);
+void write_file(char *file_name, char *output);
 
-bool cmp_file(char* file_name, char* expected_output);
+bool cmp_file(char *file_name, char *expected_output);
 
 void print_bool(bool b);
 #endif

@@ -101,4 +101,4 @@ Running Test Case: 7
 [ 3900 ] TaskMiss PERIOD OVERRUN -> Policy 1 
 [TRACE] 3950:TaskMiss:MISS
 [TRACE] 3950:TaskMiss:END
-qemu-system-arm: terminating on signal 15 from pid 31205 (/bin/bash)
+qemu-system-arm: terminating on signal 15 from pid 25147 (/bin/bash)

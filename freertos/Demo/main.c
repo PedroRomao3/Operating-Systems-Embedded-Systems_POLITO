@@ -24,24 +24,26 @@ int main(void)
     /* Initializes semihosting (gives access to host computer files) */
     initialise_monitor_handles();
 
-
     char *cmd = (char *)get_cmdline();
-    if (cmd != NULL) {
+    if (cmd != NULL)
+    {
         char *ptr = strstr(cmd, "TEST=");
-        if (ptr != NULL) {
+        if (ptr != NULL)
+        {
             RUNTIME_TEST_CASE = atoi(ptr + 5);
         }
     }
-    
+
     // Fallback: If no arg provided, default to 5 (or whatever)
-    if (RUNTIME_TEST_CASE == 0) RUNTIME_TEST_CASE = 5;
+    if (RUNTIME_TEST_CASE == 0)
+        RUNTIME_TEST_CASE = 5;
 
     SdkLog("Running Test Case: %d\n", RUNTIME_TEST_CASE);
 
     // LogAlways(cmd);
     // UART_printf("\n");
 
-    // /*  Example of writing/reading a file and testing its content 
+    // /*  Example of writing/reading a file and testing its content
     //     You should also find the file on your pc after running these lines */
     // write_file("./Output/test.txt", "TEST");
     // print_bool(cmp_file("./Output/test.txt", "TEST")); // should print True
@@ -64,5 +66,6 @@ int main(void)
     /* Start FreeRTOS scheduler */
     vTaskStartScheduler();
 
-    for (;;);
+    for (;;)
+        ;
 }

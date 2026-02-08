@@ -3,10 +3,6 @@
 #include "setup.h"
 #include <string.h>
 
-// #ifndef TEST_CASE
-//     #define TEST_CASE 5
-// #endif
-
 extern int RUNTIME_TEST_CASE;
 
 static void vBurnCPU(TickType_t ticks_to_wait)
@@ -197,10 +193,6 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList)
     }
 }
 
-/* Retrieving arguments from command line */
-
-#define SYS_GET_CMDLINE 0x15
-
 static inline int semihosting_call(int reason, void *arg)
 {
     int value;
@@ -214,8 +206,6 @@ static inline int semihosting_call(int reason, void *arg)
         : "r0", "r1", "memory");
     return value;
 }
-
-#define CMDLINE_MAX 128
 
 static char cmdline[CMDLINE_MAX];
 
