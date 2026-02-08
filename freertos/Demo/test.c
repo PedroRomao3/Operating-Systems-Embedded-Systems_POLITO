@@ -161,7 +161,7 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList)
 
     if (RUNTIME_TEST_CASE == 7)
     {
-        UART_printf("\n[TEST 5] Deadline Miss (Not Overrun)\n");
+        UART_printf("\n[TEST 7] Deadline Miss (Not Overrun)\n");
 
         TaskConfiguration_t tasks[] = {
             {"TaskMiss", TaskGeneric, (void *)pdMS_TO_TICKS(150),
@@ -177,7 +177,7 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList)
 
     if (RUNTIME_TEST_CASE == 8)
     {
-        UART_printf("\n[TEST 5] Deadline Miss (Not Overrun)\n");
+        UART_printf("\n[TEST 8] Deadline Miss (Not Overrun)\n");
 
         TaskConfiguration_t tasks[] = {
             {"TaskMiss", TaskGeneric, (void *)pdMS_TO_TICKS(150),

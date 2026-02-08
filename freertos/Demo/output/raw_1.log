@@ -1186,4 +1186,15 @@ Running Test Case: 1
 [ 3940 ] PTL_MGR released TaskA 
 [TRACE] 3940:TaskA:START
 [TRACE] 3942:TaskA:END
-qemu-system-arm: terminating on signal 15 from pid 25147 (/bin/bash)
+[ 3950 ] PTL_MGR released TaskA 
+[TRACE] 3950:TaskA:START
+[TRACE] 3952:TaskA:END
+[ 3960 ] PTL_MGR released TaskA 
+[TRACE] 3960:TaskA:START
+[TRACE] 3962:TaskA:END
+[ 3970 ] PTL_MGR released TaskA 
+[TRACE] 3970:TaskA:START
+[TRACE] 3972:TaskA:END
+[ 3980 ] PTL_MGR released TaskA 
+[TRACE] 3980:TaskA:START
+qemu-system-arm: terminating on signal 15 from pid 25821 (/bin/bash)

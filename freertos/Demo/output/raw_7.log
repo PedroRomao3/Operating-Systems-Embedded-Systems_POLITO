@@ -1,6 +1,6 @@
 Running Test Case: 7
 
-[TEST 5] Deadline Miss (Not Overrun)
+[TEST 7] Deadline Miss (Not Overrun)
 [ 0 ] PTL_MGR released TaskMiss 
 [TRACE] 0:TaskMiss:START
 [ 100 ] TaskMiss PERIOD OVERRUN -> Policy 1 
@@ -101,4 +101,4 @@ Running Test Case: 7
 [ 3900 ] TaskMiss PERIOD OVERRUN -> Policy 1 
 [TRACE] 3950:TaskMiss:MISS
 [TRACE] 3950:TaskMiss:END
-qemu-system-arm: terminating on signal 15 from pid 25147 (/bin/bash)
+qemu-system-arm: terminating on signal 15 from pid 25821 (/bin/bash)
