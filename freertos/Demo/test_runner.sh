@@ -37,10 +37,21 @@ check_stress_log() {
     fi
 
     START_COUNT=$(grep -c ":START" "$LOG_FILE")
+    END_COUNT=$(grep -c ":END" "$LOG_FILE")
+
+
     if [ "$START_COUNT" -eq 0 ]; then
         echo "❌ No tasks started"
         return 1
     fi
+
+    #ADJUST
+    if [ "$END_COUNT" -lt 2 ]; then
+        echo "❌ not enough tasks ended, if tasks have long duration the value can be adjusted ctrl F "ADJUST" in script and adjust "
+        return 1
+    fi
+
+    echo "✅ PASS (0 Misses, $END_COUNT Jobs Completed)"
 
     echo "✅ PASS"
     return 0
