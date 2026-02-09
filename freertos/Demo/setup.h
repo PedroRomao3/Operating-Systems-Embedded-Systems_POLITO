@@ -38,7 +38,7 @@ typedef enum
 typedef enum
 {
     JOB_IDLE,
-    JOB_READY,
+    JOB_READY,//needed to check deadline misses properly on the manager and not on the task
     JOB_RUNNING
 } job_state_t;
 
