@@ -38,6 +38,7 @@ typedef enum
 typedef enum
 {
     JOB_IDLE,
+    JOB_READY,
     JOB_RUNNING
 } job_state_t;
 
@@ -78,6 +79,7 @@ typedef struct TaskDescription_s
     TaskHandle_t handle;        /**< FreeRTOS task handle */
     int last_release;           /**< Last release time, set to int for setting last_release to something < 0 on startup */
     TickType_t abs_deadline;    /**< Absolute deadline */
+    volatile bool job_complete; /**< Task has completed the job in the current release */
     uint32_t job_id;            /**< Job counter */
     volatile job_state_t state; /**< Job state, we need volatile to prevent strange behaviour ih edge cases */
 

@@ -70,7 +70,7 @@ TaskDescription_t *vTaskProcessesCreate(const char *name,
     if (deadline == 0)
     {
         p->deadline = period;
-        //0 to satisfy regex
+        // 0 to satisfy regex
         SdkLog("[TRACE] 0:%s:Config: Defaulting Deadline to Period\n", name);
     }
     else
@@ -131,14 +131,12 @@ static void vTaskPeriodicWrapper(void *arg)
     for (;;)
     {
         xSemaphoreTake(p->release_sem, portMAX_DELAY);
+
         TASK_LOG(p, "[TRACE] %d:%s:START\n", xTaskGetTickCount(), p->name);
+
         p->state = JOB_RUNNING;
+
         p->function(p->arg);
-        TickType_t now = xTaskGetTickCount();
-        if (now > p->abs_deadline)
-        {
-            SdkLog("[TRACE] %d:%s:MISS\n", now, p->name);
-        }
 
         p->state = JOB_IDLE;
         TASK_LOG(p, "[TRACE] %d:%s:END\n", xTaskGetTickCount(), p->name);
@@ -263,11 +261,15 @@ static void vPeriodicReleaseManager(void *arg)
         {
             TaskDescription_t *p = listGET_LIST_ITEM_OWNER(it);
 
+            if (now == p->abs_deadline && p->state != JOB_IDLE)
+            {
+                SdkLog("[TRACE] %d:%s:MISS\n", now, p->name);
+            }
+
             if ((now - p->last_release) >= p->period)
             {
-                /*  Task has exceeded deadline : deciding appropriate
-                    response depending on policy */
-                if (p->state == JOB_RUNNING)
+                /*  Task has exceeded period : respond depending on policy */
+                if (p->state != JOB_IDLE)
                 {
                     vHandleOverrun(p, now);
                 }
@@ -275,7 +277,7 @@ static void vPeriodicReleaseManager(void *arg)
                 {
                     // even if max priority ISR still higher priority, also critical zones stop interrupts that laos could cause delay
                     TASK_LOG(p, "[ %d ] %s released %s \n", now, "PTL_MGR", p->name);
-
+                    p->state = JOB_READY;
                     p->job_id++;
                     p->last_release += p->period; // changed this, the explanation is the same as in catchup_policy code, delays still occur here (eg ISR)
                     p->abs_deadline = p->last_release + p->deadline;

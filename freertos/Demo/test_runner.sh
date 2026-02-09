@@ -1,8 +1,6 @@
 #!/bin/bash
 
-# --- CONFIGURATION ---
-TEST_CASES=(1 2 3 4 5 6 7 8 9 19 21)
-# TEST_CASES=(21)
+GOLDEN_TESTS=(1 2 3 4 5 6 7 8 9 19 21)
 SLEEP_SEC=4
 GOLDEN_DIR="./tests/golden"
 OUTPUT_DIR="./output"
@@ -13,63 +11,137 @@ BASE_QEMU_CMD="qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel $ELF_F
 mkdir -p $GOLDEN_DIR
 mkdir -p $OUTPUT_DIR
 
+
 sanitize_log() {
-    # sed to rmv time stamp then head to keep first lines only
+    # Removes timestamps to make output deterministic for Golden Files comparion
     grep "\[TRACE\]" "$1" | sed 's/\[TRACE\] [0-9]*:/\[TRACE\]:/g' | head -n 30 > "$2"
 }
 
-echo "    STARTING FAST TEST RUN"
-
-echo "Compiling Global Binary..."
-rm -f $ELF_FILE
-make cleanobj > /dev/null 2>&1
-make > /dev/null 2>&1 
-
-if [ ! -f "$ELF_FILE" ]; then
-    echo "❌ COMPILE FAILED"
-    exit 1
-fi
-
-fails=0
-
-for T in "${TEST_CASES[@]}"
-do
-    echo -n "Test Case $T: "
-
+check_stress_log() {
+    local LOG_FILE="$1"
+    local FAIL_FOUND=0
     
+    echo "[Failure scan]"
+
+    if grep -qE "ASSERT|ERROR|Fault" "$LOG_FILE"; then
+        echo "❌ System Crash or Assertion Fail"
+        grep -E "ASSERT|ERROR|Fault" "$LOG_FILE"
+        return 1
+    fi
+
+    #maybe allow overruns
+    if grep -qE "MISS|OVERRUN" "$LOG_FILE"; then
+        echo "❌ FAIL: Deadline Miss or Overrun Detected:"
+        grep -E "MISS|OVERRUN" "$LOG_FILE" | head -n 5
+        return 1
+    fi
+
+    START_COUNT=$(grep -c ":START" "$LOG_FILE")
+    if [ "$START_COUNT" -eq 0 ]; then
+        echo "❌ No tasks started"
+        return 1
+    fi
+
+    echo "✅ PASS"
+    return 0
+}
+
+compile_project() {
+    echo "Compiling Project..."
+    rm -f $ELF_FILE
+    make cleanobj > /dev/null 2>&1
+    make > /dev/null 2>&1 
+
+    if [ ! -f "$ELF_FILE" ]; then
+        echo "❌ COMPILE FAILED"
+        exit 1
+    fi
+}
+
+run_qemu() {
+    local T="$1"
     FULL_CMD="$BASE_QEMU_CMD -semihosting-config enable=on,target=native,arg=TEST=$T"
-
-    # Run QEMU in the background using &
-    $FULL_CMD > "$OUTPUT_DIR/raw_$T.log" 2>&1 &
     
+    # Run QEMU in background
+    $FULL_CMD > "$OUTPUT_DIR/raw_$T.log" 2>&1 &
     QEMU_PID=$!
     
     sleep $SLEEP_SEC
     
     kill $QEMU_PID > /dev/null 2>&1
     wait $QEMU_PID 2>/dev/null
+}
 
-    if [ ! -s "$OUTPUT_DIR/raw_$T.log" ]; then
-        echo "⚠️  EMPTY LOG (Still empty?)"
-        fails=$((fails+1))
-        continue
+
+MODE="golden"
+TARGET_TEST=0
+
+if [ "$1" == "stress" ]; then
+    MODE="stress"
+    TARGET_TEST=$2
+    if [ -z "$TARGET_TEST" ]; then
+        echo "Usage: ./test_runner.sh stress <TEST_NUMBER>"
+        exit 1
+    fi
+fi
+
+compile_project
+
+if [ "$MODE" == "stress" ]; then
+    # --- STRESS MODE (Logic Check Only) ---
+    echo "========================================"
+    echo " RUNNING STRESS TEST CASE: $TARGET_TEST"
+    echo "========================================"
+    
+    run_qemu $TARGET_TEST
+    
+    if [ ! -s "$OUTPUT_DIR/raw_$TARGET_TEST.log" ]; then
+        echo "⚠️  EMPTY LOG (QEMU Failed to run?)"
+        exit 1
     fi
 
-    sanitize_log "$OUTPUT_DIR/raw_$T.log" "$OUTPUT_DIR/actual_$T.txt"
-    GOLDEN_FILE="$GOLDEN_DIR/test_$T.txt"
+    check_stress_log "$OUTPUT_DIR/raw_$TARGET_TEST.log"
+    exit $?
 
-    if [ ! -f "$GOLDEN_FILE" ]; then
-        echo "⚠️  NO GOLDEN FILE (Generated: $OUTPUT_DIR/actual_$T.txt)"
-    else
-        if diff -q -w "$OUTPUT_DIR/actual_$T.txt" "$GOLDEN_FILE" > /dev/null; then
-            echo "✅ PASS"
-        else
-            echo "❌ FAIL"
-            diff -y --suppress-common-lines "$GOLDEN_FILE" "$OUTPUT_DIR/actual_$T.txt" | head -n 5
+else
+    echo "========================================"
+    echo " RUNNING GOLDEN TESTS"
+    echo "========================================"
+    
+    fails=0
+    for T in "${GOLDEN_TESTS[@]}"
+    do
+        echo -n "Test Case $T: "
+        run_qemu $T
+
+        if [ ! -s "$OUTPUT_DIR/raw_$T.log" ]; then
+            echo "⚠️  EMPTY LOG"
             fails=$((fails+1))
+            continue
         fi
-    fi
-done
 
-echo "========================================"
-exit $fails
+        sanitize_log "$OUTPUT_DIR/raw_$T.log" "$OUTPUT_DIR/actual_$T.txt"
+        GOLDEN_FILE="$GOLDEN_DIR/test_$T.txt"
+
+        if [ ! -f "$GOLDEN_FILE" ]; then
+            echo "⚠️  NO GOLDEN FILE (Generated: $OUTPUT_DIR/actual_$T.txt)"
+        else
+            if diff -q -w "$OUTPUT_DIR/actual_$T.txt" "$GOLDEN_FILE" > /dev/null; then
+                echo "✅ PASS"
+            else
+                echo "❌ FAIL (Output Changed)"
+                # showw diff
+                diff -y --suppress-common-lines "$GOLDEN_FILE" "$OUTPUT_DIR/actual_$T.txt" | head -n 3
+                fails=$((fails+1))
+            fi
+        fi
+    done
+    
+    echo "========================================"
+    if [ $fails -eq 0 ]; then
+        echo "ALL PASSED"
+    else
+        echo "$fails TESTS FAILED"
+    fi
+    exit $fails
+fi
