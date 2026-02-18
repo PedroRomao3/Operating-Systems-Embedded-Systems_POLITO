@@ -134,7 +134,8 @@
 
 #ifndef LIBRARY_LOG_NAME
     #define LIBRARY_LOG_NAME                      "PERIODIC_SCHEDULER"
-    #define configLOG_BUFFER_SIZE                 256
+    // #define configLOG_BUFFER_SIZE                 256
+    #define configLOG_BUFFER_SIZE                 2048
 #endif
 
 #ifndef LIBRARY_LOG_LEVEL

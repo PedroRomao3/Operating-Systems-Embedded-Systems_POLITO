@@ -33,6 +33,13 @@
 #include <string.h>
 #include "uart.h"
 
+// NOTE(Reda): Currently in dev, set to 1 to use periodic logging task with buffering, 0 uses classic in place logging
+#define LOG_USE_BUFFERING 0
+
+#if LOG_USE_BUFFERING
+    #include "stream_buffer.h"
+#endif
+
 /*
  * Initialize a logging system that can be used from FreeRTOS tasks and Win32
  * threads.  Do not call printf() directly while the scheduler is running.
@@ -51,7 +58,12 @@ void vLoggingInit( BaseType_t xLogToStdout,
 
 void vPlatformInitLogging( void );
 
-void vLoggingPrintf( const char * pcFormat, ...);
+#if !LOG_USE_BUFFERING
+    void vLoggingPrintf( const char * pcFormat, ...);
+#else
+    void vLoggingQueue( const char* pcFormat, ...);
+    void vLoggingTask(void *pvParameters);
+#endif
 
 void ReleaseLog(char* old_name, char* new_name, int now);
 

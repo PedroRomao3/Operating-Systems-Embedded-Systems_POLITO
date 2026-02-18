@@ -8,6 +8,7 @@
 #include "logging_stack.h"
 
 #include <stdio.h>
+#include <stdlib.h> // atoi()
 
 /* Global task lists */
 List_t PeriodicTaskConfigList;
@@ -15,6 +16,18 @@ List_t NonPeriodicTaskConfigList;
 
 extern void initialise_monitor_handles(void);
 int RUNTIME_TEST_CASE = 0;
+
+void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer,
+                                    StackType_t **ppxIdleTaskStackBuffer,
+                                    uint32_t *pulIdleTaskStackSize )
+{
+    static StaticTask_t xIdleTaskTCB;
+    static StackType_t uxIdleTaskStack[ configMINIMAL_STACK_SIZE ];
+
+    *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
+    *ppxIdleTaskStackBuffer = uxIdleTaskStack;
+    *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
+}
 
 int main(void)
 {
@@ -62,6 +75,11 @@ int main(void)
 
     /* Start periodic task layer */
     vStartPeriodicScheduler(&PeriodicTaskConfigList);
+
+#if LOG_USE_BUFFERING
+    // Start logging task with lowest priority
+    vStartLoggingTask(&NonPeriodicTaskConfigList);
+#endif
 
     /* Start FreeRTOS scheduler */
     vTaskStartScheduler();

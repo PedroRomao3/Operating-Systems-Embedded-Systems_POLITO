@@ -193,56 +193,56 @@ static void vHandleOverrun(TaskDescription_t *p, TickType_t now)
     TASK_LOG(p, "[TRACE] %d:%s:OVERRUN Policy:%d\n", now, p->name, p->overrun_policy);
     switch (p->overrun_policy)
     {
-    case POLICY_NONE:
-        LogError("[ %d ] %s Task has POLICY_NONE which should not be allowed!\n", now, p->name);
-        break;
-    case POLICY_SKIP:
-        p->last_release += p->period;
-        break;
-    case POLICY_KILL:
-        vTaskDelete(p->handle);
+        case POLICY_NONE:
+            LogError("[ %d ] %s Task has POLICY_NONE which should not be allowed!\n", now, p->name);
+            break;
+        case POLICY_SKIP:
+            p->last_release += p->period;
+            break;
+        case POLICY_KILL:
+            vTaskDelete(p->handle);
 
-        xTaskCreate(vTaskPeriodicWrapper,
-                    p->name,
-                    p->stack_size,
-                    p,
-                    p->priority,
-                    &p->handle);
+            xTaskCreate(vTaskPeriodicWrapper,
+                        p->name,
+                        p->stack_size,
+                        p,
+                        p->priority,
+                        &p->handle);
 
-        p->state = JOB_IDLE;
+            p->state = JOB_IDLE;
 
-        // NOTE: Here we want to fallthrough, since the teacher says to release immediatly
+            // NOTE: Here we want to fallthrough, since the teacher says to release immediatly
 
-    case POLICY_CATCH_UP:
-        p->job_id++;
+        case POLICY_CATCH_UP:
+            p->job_id++;
 
-        /* FIX: PREVENT PERMANENT SCHEDULE DRIFT
-         * If we do: p->last_release = now;
-         * Assuming we start at 0 with T=10, if an overrun makes us arrive at T=11,
-         * the new schedule becomes 11 - 21 - 31... instead of 10 - 20 - 30...
-         * This means we permanently "accept" the delay and shift the whole timeline.
-         * By doing += period, we stay locked to the original grid.
-         */
-        p->last_release += p->period;
+            /* FIX: PREVENT PERMANENT SCHEDULE DRIFT
+            * If we do: p->last_release = now;
+            * Assuming we start at 0 with T=10, if an overrun makes us arrive at T=11,
+            * the new schedule becomes 11 - 21 - 31... instead of 10 - 20 - 30...
+            * This means we permanently "accept" the delay and shift the whole timeline.
+            * By doing += period, we stay locked to the original grid.
+            */
+            p->last_release += p->period;
 
-        /* NOTE ON "JOB SWAPPING" vs "SERIALIZED CATCH-UP":
-         * pausing the current Job A (K) to release Job B (K+1)
-         * and resuming A later is not feasible or logical here:
-         * * 1. TECHNICAL: TaskDescription_t has one handle/stack. Resuming exactly
-         * where a task stopped requires a "Task Pool" or stack-cloning which
-         * isn't supported by the current architecture.
-         * * 2. LOGICAL: In the real world, stopping a task mid-way (e.g., after reading
-         * a sensor but before outputting the result) makes little sense. Outputting
-         * that "stale" value later is often dangerous or useless.
-         * * 3. THE SOLUTION: We "Release Immediately" by giving the semaphore now.
-         * The late Job K finishes cleanly, then immediately takes the pending
-         * semaphore to start Job K+1. This is still a Catch-Up policy.
-         */
+            /* NOTE ON "JOB SWAPPING" vs "SERIALIZED CATCH-UP":
+            * pausing the current Job A (K) to release Job B (K+1)
+            * and resuming A later is not feasible or logical here:
+            * * 1. TECHNICAL: TaskDescription_t has one handle/stack. Resuming exactly
+            * where a task stopped requires a "Task Pool" or stack-cloning which
+            * isn't supported by the current architecture.
+            * * 2. LOGICAL: In the real world, stopping a task mid-way (e.g., after reading
+            * a sensor but before outputting the result) makes little sense. Outputting
+            * that "stale" value later is often dangerous or useless.
+            * * 3. THE SOLUTION: We "Release Immediately" by giving the semaphore now.
+            * The late Job K finishes cleanly, then immediately takes the pending
+            * semaphore to start Job K+1. This is still a Catch-Up policy.
+            */
 
-        p->abs_deadline = p->last_release + p->deadline;
-        xSemaphoreGive(p->release_sem);
-        vTaskResume(p->handle);
-        break;
+            p->abs_deadline = p->last_release + p->deadline;
+            xSemaphoreGive(p->release_sem);
+            vTaskResume(p->handle);
+            break;
     }
 }
 
@@ -303,3 +303,16 @@ void vStartPeriodicScheduler(List_t *PeriodicTaskConfigList)
                 configMAX_PRIORITIES - 1,
                 NULL);
 }
+
+#if LOG_USE_BUFFERING
+
+    void vStartLoggingTask(List_t *NonPeriodicTaskConfigList)
+    {
+        xTaskCreate(/* TODO: */vLoggingTask,
+                "LOGGING_MGR",
+                512,
+                NonPeriodicTaskConfigList,
+                0, // Set the lowest priority
+                NULL);
+    }
+#endif

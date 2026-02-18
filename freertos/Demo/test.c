@@ -22,6 +22,8 @@ static void TaskGeneric(void *arg)
 
 static void TaskBursty(void *arg)
 {
+    (void)arg; // unused parameter warning silence
+
     static int cycle_count = 0;
     cycle_count++;
 
@@ -378,9 +380,17 @@ void read_file(char *file_name)
 
     while ((c = fgetc(f)) != EOF)
     {
-        vLoggingPrintf("%c", c);
+#if LOG_USE_BUFFERING
+    vLoggingQueue("%c", c);
+#else
+    vLoggingPrintf("%c", c);
+#endif
     }
+#if LOG_USE_BUFFERING
+    vLoggingQueue("\n");
+#else
     vLoggingPrintf("\n");
+#endif
     fclose(f);
 }
 

@@ -65,7 +65,6 @@
     #define LOG_METADATA_ARGS    __FUNCTION__, __LINE__  /**< @brief Arguments into the metadata logging prefix format. */
 #endif
 
-
 /**
  * @brief Common macro that maps all the logging interfaces,
  * (#LogDebug, #LogInfo, #LogWarn, #LogError) to the platform-specific logging
@@ -75,7 +74,11 @@
  * vLoggingPrintf function.
  */
 #ifndef SdkLog
-    #define SdkLog(...) vLoggingPrintf(__VA_ARGS__)
+    #if !LOG_USE_BUFFERING
+        #define SdkLog(...) vLoggingPrintf(__VA_ARGS__)
+    #else
+        #define SdkLog(...) vLoggingQueue(__VA_ARGS__)
+    #endif
 #endif
 
 /**

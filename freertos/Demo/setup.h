@@ -169,4 +169,13 @@ void vListProcLaunchNonPeriodic(List_t *NonPeriodicTaskConfigList);
  */
 void vStartPeriodicScheduler(List_t *PeriodicTaskConfigList);
 
+#if LOG_USE_BUFFERING
+
+    /**
+     * @brief Start the logging task with lowest priority
+     */
+    void vStartLoggingTask(List_t *NonPeriodicTaskConfigList);
+
+#endif 
+
 #endif
