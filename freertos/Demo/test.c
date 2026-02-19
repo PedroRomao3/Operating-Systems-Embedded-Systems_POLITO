@@ -5,12 +5,29 @@
 
 extern int RUNTIME_TEST_CASE;
 
-static void vBurnCPU(TickType_t ticks_to_wait)
+// static void vBurnCPU(TickType_t ticks_to_wait)
+// {
+//     TickType_t start = xTaskGetTickCount();
+//     while ((xTaskGetTickCount() - start) < ticks_to_wait)
+//     {
+//         __asm("nop");
+//     }
+// }
+
+static void vBurnCPU(TickType_t target_budget_ticks)
 {
-    TickType_t start = xTaskGetTickCount();
-    while ((xTaskGetTickCount() - start) < ticks_to_wait)
+    TaskHandle_t xHandle = xTaskGetCurrentTaskHandle();
+
+    // ulTaskGetRunTimeCounter returns the exact amount of time THIS
+    // task has been in the Running state since it was created.
+    configRUN_TIME_COUNTER_TYPE start_time = ulTaskGetRunTimeCounter(xHandle);
+
+    // Loop until the task's personal active execution time reaches the budget.
+    // If preempted, ulTaskGetRunTimeCounter() pauses for this task.
+    while ((ulTaskGetRunTimeCounter(xHandle) - start_time) < target_budget_ticks)
     {
-        __asm("nop");
+        // Keep the CPU busy. volatile prevents the compiler from removing the loop.
+        __asm volatile("nop");
     }
 }
 
@@ -31,6 +48,17 @@ static void TaskBursty(void *arg)
     }
     else
     {
+        vBurnCPU(pdMS_TO_TICKS(1));
+    }
+}
+
+static void TaskInfinite(void *arg)
+{
+    char *name = (char *)arg;
+    for (;;)
+    {
+        SdkLog("[TRACE] %d:%s:RUNNING\n", xTaskGetTickCount(), name);
+
         vBurnCPU(pdMS_TO_TICKS(1));
     }
 }
@@ -259,6 +287,67 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList)
 
         InitTesting(&config, PeriodicList, NonPeriodicList);
     }
+    if (RUNTIME_TEST_CASE == 10)
+    {
+        UART_printf("\n[TEST 10] Periodic vs Background (Preemption)\n");
+
+        /* Scenario:
+         * Task A is Periodic (Prio 2).
+         * Task B is Background (Prio 1).
+         * Note: Passing 0 for Period and Deadline tells InitTesting it is Non-Periodic.
+         */
+        TaskConfiguration_t tasks[] = {
+            {"PeriodicA", TaskGeneric, (void *)pdMS_TO_TICKS(2), 512, 2, 10, 10, TRACE_ENABLED, POLICY_SKIP},
+            {"BackgroundB", TaskInfinite, "BackgroundB", 512, 1, 0, 0, TRACE_ENABLED, POLICY_NONE}};
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 2,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
+    if (RUNTIME_TEST_CASE == 11)
+    {
+        UART_printf("\n[TEST 11] Starvation (Periodic > NP)\n");
+
+        /* Scenario:
+         * Task A is Periodic (Prio 2) but requires 11ms of work every 10ms.
+         * Task B is Background (Prio 1).
+         * IMPORTANT: with the skip policy there is no starvation, makes sense
+         */
+        TaskConfiguration_t tasks[] = {
+            {"PeriodicA", TaskGeneric, (void *)pdMS_TO_TICKS(11), 512, 2, 10, 10, TRACE_ENABLED, POLICY_CATCH_UP},
+            {"BackgroundB", TaskInfinite, "BackgroundB", 512, 1, 0, 0, TRACE_ENABLED, POLICY_NONE}};
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 2,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
+    if (RUNTIME_TEST_CASE == 12)
+    {
+        UART_printf("\n[TEST 12] Context Switch Overhead\n");
+
+        /* Scenario:
+         * Period = 5ms. Work = 4ms. Free time = 1ms.
+         * Expectation: Task should consistently meet its deadline.
+         */
+        TaskConfiguration_t tasks[] = {
+            {"TightTask", TaskGeneric, (void *)pdMS_TO_TICKS(4), 512, 1, 5, 5, TRACE_ENABLED, POLICY_SKIP}};
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 1,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
     if (RUNTIME_TEST_CASE == 19)
     {
         UART_printf("\n[TEST 19] Sporadic Overload (Catch Up)\n");
@@ -293,7 +382,7 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList)
         UART_printf("Tasks: Emergency(Highest), T1, T2(Early Deadline), T3(Lowest)\n");
 
         TaskConfiguration_t tasks[] = {
-            /* 1. Emergency (Modeled as Worst-Case Periodic)
+            /* 1. Emergency (Worst-Case Periodic)
              * T = 50ms (Min Inter-arrival time)
              * C = 5ms
              * Prio = 4 (Highest, because Shortest Period)
@@ -320,13 +409,180 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList)
              * C = 100ms
              * Prio = 1 (Lowest)
              */
-            {"Tau3", TaskGeneric, (void *)pdMS_TO_TICKS(100), 512, 1, 350, 350, TRACE_ENABLED, POLICY_SKIP}
-        };
+            {"Tau3", TaskGeneric, (void *)pdMS_TO_TICKS(100), 512, 1, 350, 350, TRACE_ENABLED, POLICY_SKIP}};
 
         SchedulerConfig_t config = {
             .policy = POLICY_SKIP,
             .tasks = tasks,
             .num_tasks = 4,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
+    if (RUNTIME_TEST_CASE == 22)
+    {
+        UART_printf("\n[TEST 22] Harmonic Razor's Edge (U = 97.5%%)\n");
+        /* Scenario:
+         * T1: T=10, C=5  -> 50.0% Load
+         * T2: T=20, C=5  -> 25.0% Load
+         * T3: T=40, C=9  -> 22.5% Load
+         * Total Utilization = 97.5%.
+         * * Expectation: Because the periods are harmonic (10, 20, 40), they align
+         * perfectly. This SHOULD pass without a single miss.
+         * If it throws an OVERRUN or MISS, OS overhead is taking >2.5%
+         * of the CPU time (which is a great metric to know).
+         */
+        TaskConfiguration_t tasks[] = {
+            {"Harmonic_High", TaskGeneric, (void *)pdMS_TO_TICKS(5), 512, 3, 10, 10, TRACE_ENABLED, POLICY_SKIP},
+            {"Harmonic_Med", TaskGeneric, (void *)pdMS_TO_TICKS(5), 512, 2, 20, 20, TRACE_ENABLED, POLICY_SKIP},
+            {"Harmonic_Low", TaskGeneric, (void *)pdMS_TO_TICKS(9), 512, 1, 40, 40, TRACE_ENABLED, POLICY_SKIP}};
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 3,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
+    if (RUNTIME_TEST_CASE == 23)
+    {
+        UART_printf("\n[TEST 23] Guaranteed Overload (U = 107.5%%)\n");
+        /* Scenario:
+         * T1: T=10, C=6  -> 60.0% Load
+         * T2: T=20, C=6  -> 30.0% Load
+         * T3: T=40, C=7  -> 17.5% Load
+         * Total Utilization = 107.5%.
+         *
+         * Expectation: The CPU physically cannot keep up.
+         * T1 and T2 will preempt T3 constantly.
+         * T3 will Starve/Miss its deadline guaranteed.
+         * The Manager MUST log [TRACE]:Overload_Low:MISS.
+         */
+        TaskConfiguration_t tasks[] = {
+            {"Overload_High", TaskGeneric, (void *)pdMS_TO_TICKS(6), 512, 3, 10, 10, TRACE_ENABLED, POLICY_SKIP},
+            {"Overload_Med", TaskGeneric, (void *)pdMS_TO_TICKS(6), 512, 2, 20, 20, TRACE_ENABLED, POLICY_SKIP},
+            {"Overload_Low", TaskGeneric, (void *)pdMS_TO_TICKS(7), 512, 1, 40, 40, TRACE_ENABLED, POLICY_SKIP}};
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 3,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
+    if (RUNTIME_TEST_CASE == 24)
+    {
+        UART_printf("\n[TEST 24] Wiki Ex 1: Liu & Layland Safe (U = 72.5%%)\n");
+        // Utilization = 72.5% | Guaranteed by Liu & Layland
+        TaskConfiguration_t tasks[] = {
+            // Priorities strictly follow RM: Shortest Period = Highest Priority
+            {"P2", TaskGeneric, (void *)pdMS_TO_TICKS(20), 512, 3, 50, 50, TRACE_ENABLED, POLICY_SKIP},
+            {"P1", TaskGeneric, (void *)pdMS_TO_TICKS(10), 512, 2, 80, 80, TRACE_ENABLED, POLICY_SKIP},
+            {"P3", TaskGeneric, (void *)pdMS_TO_TICKS(20), 512, 1, 100, 100, TRACE_ENABLED, POLICY_SKIP}};
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 3,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
+    if (RUNTIME_TEST_CASE == 25)
+    {
+        UART_printf("\n[TEST 25] Wiki Ex 2: Hyperbolic Bound Safe (U = 78.7%%)\n");
+        // Utilization = 78.75% | Guaranteed by Hyperbolic Bound
+        TaskConfiguration_t tasks[] = {
+            {"P2", TaskGeneric, (void *)pdMS_TO_TICKS(20), 512, 3, 50, 50, TRACE_ENABLED, POLICY_SKIP},
+            {"P3", TaskGeneric, (void *)pdMS_TO_TICKS(20), 512, 2, 100, 100, TRACE_ENABLED, POLICY_SKIP},
+            {"P1", TaskGeneric, (void *)pdMS_TO_TICKS(30), 512, 1, 160, 160, TRACE_ENABLED, POLICY_SKIP}};
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 3,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
+    if (RUNTIME_TEST_CASE == 26)
+    {
+        UART_printf("\n[TEST 26] Wiki Ex 3: Harmonic Subset Safe (U = 81.8%%)\n");
+        // Utilization = 81.87% | Guaranteed by Harmonic Subsets
+        TaskConfiguration_t tasks[] = {
+            {"P2", TaskGeneric, (void *)pdMS_TO_TICKS(20), 512, 3, 50, 50, TRACE_ENABLED, POLICY_SKIP},
+            {"P3", TaskGeneric, (void *)pdMS_TO_TICKS(20), 512, 2, 100, 100, TRACE_ENABLED, POLICY_SKIP},
+            {"P1", TaskGeneric, (void *)pdMS_TO_TICKS(70), 512, 1, 320, 320, TRACE_ENABLED, POLICY_SKIP}};
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 3,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
+    if (RUNTIME_TEST_CASE == 27)
+    {
+        UART_printf("\n[TEST 27] Non-Harmonic Overrun (U = 92.8%%)\n");
+        /* Scenario:
+         * T1: T=50,  C=20 -> 40.0% Load
+         * T2: T=70,  C=30 -> 42.8% Load
+         * T3: T=100, C=10 -> 10.0% Load
+         * Total Utilization = 92.8%. (Well under 100%)
+         *
+         * Expectation: 
+         * At T=0, all tasks release. 
+         * T1 runs [0-20]. 
+         * T2 runs [20-50]. 
+         * T1 runs [50-70] (2nd period).
+         * T2 runs [70-100] (2nd period).
+         * By T=100, T1 and T2 have consumed exactly 100ms of CPU time.
+         * T3 (the lowest priority) got ZERO CPU time and will GUARANTEE a MISS at T=100,
+         * even though the system mathematically had 7.2% idle time available overall.
+         */
+        TaskConfiguration_t tasks[] = {
+            {"BadAlign_High", TaskGeneric, (void *)pdMS_TO_TICKS(20), 512, 3,  50,  50, TRACE_ENABLED, POLICY_SKIP},
+            {"BadAlign_Med",  TaskGeneric, (void *)pdMS_TO_TICKS(30), 512, 2,  70,  70, TRACE_ENABLED, POLICY_SKIP},
+            {"BadAlign_Low",  TaskGeneric, (void *)pdMS_TO_TICKS(10), 512, 1, 100, 100, TRACE_ENABLED, POLICY_SKIP}
+        };
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 3,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
+    if (RUNTIME_TEST_CASE == 28)
+    {
+        UART_printf("\n[TEST 28] Zero-Slack Mathematical Edge (U = 92.8%%)\n");
+        /* Scenario:
+         * T1: T=40, C=20 -> 50.0% Load
+         * T2: T=70, C=30 -> 42.8% Load
+         * Total Utilization = 92.8%.
+         *
+         * Math (Response Time Analysis):
+         * R2 = C2 + ceil(R2/T1)*C1
+         * R2 = 30 + ceil(70/40)*20 = 30 + 40 = 70.
+         * The math says T2 will finish EXACTLY at its deadline (70).
+         * * Expectation: 
+         * Because the math leaves exactly ZERO slack, the tiny microseconds
+         * of overhead required for FreeRTOS to context switch between T1 and T2 
+         * will push T2's completion to ~70.1. 
+         * Your monitor will proudly catch this as a MISS exactly at tick 70.
+         */
+        TaskConfiguration_t tasks[] = {
+            {"ZeroSlack_High", TaskGeneric, (void *)pdMS_TO_TICKS(20), 512, 2,  40,  40, TRACE_ENABLED, POLICY_SKIP},
+            {"ZeroSlack_Low",  TaskGeneric, (void *)pdMS_TO_TICKS(30), 512, 1,  70,  70, TRACE_ENABLED, POLICY_SKIP}
+        };
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 2,
             .max_tasks = 5};
 
         InitTesting(&config, PeriodicList, NonPeriodicList);

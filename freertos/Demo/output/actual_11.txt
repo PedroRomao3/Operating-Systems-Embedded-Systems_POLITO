@@ -1,0 +1,30 @@
+[TRACE]:BackgroundB:Config: Defaulting Deadline to Period
+[TRACE]:PeriodicA:START
+[TRACE]:PeriodicA:MISS
+[TRACE]:PeriodicA:OVERRUN Policy:3
+[TRACE]:PeriodicA:END
+[TRACE]:PeriodicA:START
+[TRACE]:PeriodicA:MISS
+[TRACE]:PeriodicA:OVERRUN Policy:3
+[TRACE]:PeriodicA:END
+[TRACE]:PeriodicA:START
+[TRACE]:PeriodicA:MISS
+[TRACE]:PeriodicA:OVERRUN Policy:3
+[TRACE]:PeriodicA:END
+[TRACE]:PeriodicA:START
+[TRACE]:PeriodicA:MISS
+[TRACE]:PeriodicA:OVERRUN Policy:3
+[TRACE]:PeriodicA:END
+[TRACE]:PeriodicA:START
+[TRACE]:PeriodicA:MISS
+[TRACE]:PeriodicA:OVERRUN Policy:3
+[TRACE]:PeriodicA:END
+[TRACE]:PeriodicA:START
+[TRACE]:PeriodicA:MISS
+[TRACE]:PeriodicA:OVERRUN Policy:3
+[TRACE]:PeriodicA:END
+[TRACE]:PeriodicA:START
+[TRACE]:PeriodicA:MISS
+[TRACE]:PeriodicA:OVERRUN Policy:3
+[TRACE]:PeriodicA:END
+[TRACE]:PeriodicA:START

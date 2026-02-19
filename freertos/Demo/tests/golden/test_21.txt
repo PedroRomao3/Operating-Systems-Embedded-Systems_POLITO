@@ -15,13 +15,13 @@
 [TRACE]:Emergency:END
 [TRACE]:Tau2:START
 [TRACE]:Tau2:END
-[TRACE]:Tau3:END
 [TRACE]:Emergency:START
 [TRACE]:Emergency:END
 [TRACE]:Tau1:START
 [TRACE]:Tau1:END
 [TRACE]:Emergency:START
 [TRACE]:Emergency:END
+[TRACE]:Tau3:END
 [TRACE]:Emergency:START
 [TRACE]:Emergency:END
 [TRACE]:Tau1:START

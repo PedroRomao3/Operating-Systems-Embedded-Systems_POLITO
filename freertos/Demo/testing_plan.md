@@ -62,3 +62,15 @@
 | **19** | **Task A**<br>*(Bursty)* | 10ms | 10ms | 1 | 1ms..15ms | **Sporadic Overload:** Task usually takes 1ms, but every 10th job takes 15ms.<br>Verify system logs a miss *only* for the 10th job and recovers immediately for the 11th. |
 | **20** | **Task A**<br>**Task B** | 10ms<br>10ms | 10ms<br>10ms | 2<br>1 | **5ms**<br>**5ms** | **Utilization Wall (100% Load):** Total execution time = 10ms. Period = 10ms.<br>Theoretical limit. With context switch overhead, Task B *should* barely miss or barely make it. |
 | **21** | **Emergency** (T=50, C=5)<br>**Tau 1** (T=100, C=20)<br>**Tau 2** (T=150, C=40)<br>**Tau 3** (T=350, C=100) | 50ms<br>100ms<br>**130ms**<br>350ms | 50ms<br>100ms<br>150ms<br>350ms | 4<br>3<br>2<br>1 | 5ms<br>20ms<br>40ms<br>100ms | **Stress Test (U=85.1%):**<br>1. **Emergency** never misses.<br>2. **Tau 2** meets strict deadline (D < T).<br>3. **Tau 3** is heavily preempted but eventually finishes.<br>*(Verifies Rate Monotonic Stability under high load).* |
+
+## 8. 
+*Verifies Rate Monotonic Mathematical Bounds and Edge Cases.*
+
+| Test | Tasks | Deadline | Period | Priority | Duration | Expected Behavior |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **22** | **Harmonic High**<br>**Harmonic Med**<br>**Harmonic Low** | 10ms<br>20ms<br>40ms | 10ms<br>20ms<br>40ms | 3<br>2<br>1 | 5ms<br>5ms<br>9ms | **Harmonic Razor's Edge (U=97.5%):**<br>Periods align perfectly. Should pass without misses *unless* OS overhead exceeds 2.5% of CPU time (triggering an OVERRUN on Low). |
+| **23** | **Overload High**<br>**Overload Med**<br>**Overload Low** | 10ms<br>20ms<br>40ms | 10ms<br>20ms<br>40ms | 3<br>2<br>1 | 6ms<br>6ms<br>7ms | **Guaranteed Overload (U=107.5%):**<br>CPU physically cannot keep up. High and Med preempt Low constantly. Low is guaranteed to Starve/Miss its deadline. |
+| **24** | **Wiki P2**<br>**Wiki P1**<br>**Wiki P3** | 50ms<br>80ms<br>100ms | 50ms<br>80ms<br>100ms | 3<br>2<br>1 | 20ms<br>10ms<br>20ms | **Liu & Layland Safe (U=72.5%):**<br>System is mathematically guaranteed to be schedulable (below 77.9% bound for 3 tasks). No misses expected. |
+| **25** | **Wiki P2**<br>**Wiki P3**<br>**Wiki P1** | 50ms<br>100ms<br>160ms | 50ms<br>100ms<br>160ms | 3<br>2<br>1 | 20ms<br>20ms<br>30ms | **Hyperbolic Bound Safe (U=78.7%):**<br>Fails Liu & Layland, but passes tighter Hyperbolic bound. System is mathematically schedulable. No misses expected. |
+| **26** | **Wiki P2**<br>**Wiki P3**<br>**Wiki P1** | 50ms<br>100ms<br>320ms | 50ms<br>100ms<br>320ms | 3<br>2<br>1 | 20ms<br>20ms<br>70ms | **Harmonic Subset Safe (U=81.8%):**<br>Fails both generic bounds, but P2 and P3 form a harmonic subset, raising the bound to 82.8%. No misses expected. |
+| **27** | **BadAlign High**<br>**BadAlign Med**<br>**BadAlign Low** | 50ms<br>70ms<br>100ms | 50ms<br>70ms<br>100ms | 3<br>2<br>1 | 20ms<br>30ms<br>10ms | **Non-Harmonic Overrun (U=92.8%):**<br>Utilization is under 100%, but bad period alignment starves Low at T=100. Verifies RM bounds and Overrun Policy circuit-breakers are working. |

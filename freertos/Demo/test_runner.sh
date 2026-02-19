@@ -1,6 +1,7 @@
 #!/bin/bash
 
-GOLDEN_TESTS=(1 2 3 4 5 6 7 8 9 19 21)
+GOLDEN_TESTS=(1 2 3 4 5 6 7 8 9 10 11 12 19)
+# GOLDEN_TESTS=(12)
 SLEEP_SEC=4
 GOLDEN_DIR="./tests/golden"
 OUTPUT_DIR="./output"
