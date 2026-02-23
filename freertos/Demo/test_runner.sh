@@ -1,7 +1,10 @@
 #!/bin/bash
 
-GOLDEN_TESTS=(1 2 3 4 5 6 7 8 9 10 11 12 19)
+GOLDEN_TESTS=(1 2 3 4 5 6 7 8 9 10 11 19)
+STRESS_TESTS=(12 21 22 23 24 25 26 27 28 29)
 # GOLDEN_TESTS=(12)
+# STRESS_TESTS=(22 29)
+
 SLEEP_SEC=4
 GOLDEN_DIR="./tests/golden"
 OUTPUT_DIR="./output"
@@ -91,29 +94,60 @@ TARGET_TEST=0
 if [ "$1" == "stress" ]; then
     MODE="stress"
     TARGET_TEST=$2
-    if [ -z "$TARGET_TEST" ]; then
-        echo "Usage: ./test_runner.sh stress <TEST_NUMBER>"
-        exit 1
-    fi
+    
 fi
 
 compile_project
 
 if [ "$MODE" == "stress" ]; then
     # --- STRESS MODE (Logic Check Only) ---
-    echo "========================================"
-    echo " RUNNING STRESS TEST CASE: $TARGET_TEST"
-    echo "========================================"
-    
-    run_qemu $TARGET_TEST
-    
-    if [ ! -s "$OUTPUT_DIR/raw_$TARGET_TEST.log" ]; then
-        echo "⚠️  EMPTY LOG (QEMU Failed to run?)"
-        exit 1
-    fi
+    if [ -z "$TARGET_TEST" ]; then
+        # Run all stress tests
+        echo "========================================"
+        echo " RUNNING ALL STRESS TESTS"
+        echo "========================================"
+        
+        fails=0
+        for T in "${STRESS_TESTS[@]}"
+        do
+            echo -n "Test Case $T: "
+            run_qemu $T
+            
+            if [ ! -s "$OUTPUT_DIR/raw_$T.log" ]; then
+                echo "⚠️  EMPTY LOG (QEMU Failed to run?)"
+                fails=$((fails+1))
+                continue
+            fi
 
-    check_stress_log "$OUTPUT_DIR/raw_$TARGET_TEST.log"
-    exit $?
+            check_stress_log "$OUTPUT_DIR/raw_$T.log"
+            if [ $? -ne 0 ]; then
+                fails=$((fails+1))
+            fi
+        done
+        
+        echo "========================================"
+        if [ $fails -eq 0 ]; then
+            echo "ALL STRESS TESTS PASSED"
+        else
+            echo "$fails STRESS TESTS FAILED"
+        fi
+        exit $fails
+    else
+        # Run single stress test
+        echo "========================================"
+        echo " RUNNING STRESS TEST CASE: $TARGET_TEST"
+        echo "========================================"
+        
+        run_qemu $TARGET_TEST
+        
+        if [ ! -s "$OUTPUT_DIR/raw_$TARGET_TEST.log" ]; then
+            echo "⚠️  EMPTY LOG (QEMU Failed to run?)"
+            exit 1
+        fi
+
+        check_stress_log "$OUTPUT_DIR/raw_$TARGET_TEST.log"
+        exit $?
+    fi
 
 else
     echo "========================================"

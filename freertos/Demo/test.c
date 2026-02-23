@@ -587,6 +587,32 @@ void vCreateTestTasks(List_t *PeriodicList, List_t *NonPeriodicList)
 
         InitTesting(&config, PeriodicList, NonPeriodicList);
     }
+    if (RUNTIME_TEST_CASE == 29)
+    {
+        UART_printf("\n[TEST 29] Overhead Sensitivity Analysis (U = 95.0%%)\n");
+        /* Scenario:
+         * T1: T=10, C=5  -> 50.0% Load
+         * T2: T=20, C=5  -> 25.0% Load
+         * T3: T=40, C=8  -> 20.0% Load (Reduced from 9 to 8)
+         * Total Utilization = 95.0%.
+         * * Logic:
+         * Test 22 (97.5% Load) FAILED -> OS Overhead > 2.5%
+         * If Test 29 (95.0% Load) PASSES -> OS Overhead < 5.0%
+         * * This identifies the "Maximum Schedulable Utilization" for this hardware/OS.
+         */
+        TaskConfiguration_t tasks[] = {
+            {"Harmonic_High", TaskGeneric, (void *)pdMS_TO_TICKS(5), 512, 3, 10, 10, TRACE_ENABLED, POLICY_SKIP},
+            {"Harmonic_Med",  TaskGeneric, (void *)pdMS_TO_TICKS(5), 512, 2, 20, 20, TRACE_ENABLED, POLICY_SKIP},
+            {"Harmonic_Low",  TaskGeneric, (void *)pdMS_TO_TICKS(8), 512, 1, 40, 40, TRACE_ENABLED, POLICY_SKIP}};
+
+        SchedulerConfig_t config = {
+            .policy = POLICY_SKIP,
+            .tasks = tasks,
+            .num_tasks = 3,
+            .max_tasks = 5};
+
+        InitTesting(&config, PeriodicList, NonPeriodicList);
+    }
 }
 
 static inline int semihosting_call(int reason, void *arg)
