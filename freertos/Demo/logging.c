@@ -2,7 +2,7 @@
 
 #include "FreeRTOSConfig.h"
 #include "semphr.h"
-#include "stream_buffer.h"
+#include "message_buffer.h"
 
 #if !LOG_USE_BUFFERING
 

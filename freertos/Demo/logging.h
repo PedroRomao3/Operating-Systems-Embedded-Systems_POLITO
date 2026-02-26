@@ -35,10 +35,10 @@
 
 // NOTE(Reda): Currently in dev, set to 1 to use periodic logging task with buffering, 0 uses classic in place logging
 // NOTE(Reda): Need to enable configSUPPORT_STATIC_ALLOCATION in FreeRTOSConfig.h
-#define LOG_USE_BUFFERING 0
+#define LOG_USE_BUFFERING 1
 
 #if LOG_USE_BUFFERING
-    #include "stream_buffer.h"
+    #include "message_buffer.h"
 #endif
 
 /*
