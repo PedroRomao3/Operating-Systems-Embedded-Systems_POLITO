@@ -4,18 +4,13 @@
 [![Architecture](https://img.shields.io/badge/Arch-ARM_Cortex--M3-orange.svg)](https://developer.arm.com/ip-products/processors/cortex-m)
 
 ## Project Overview
-This repository contains a custom **Periodic Task Layer (PTL)** engineered on top of the standard FreeRTOS kernel. While FreeRTOS provides excellent priority-based preemptive scheduling, it lacks native enforcement of strict periodic execution and deadline monitoring. 
+This repository contains a custom **Periodic Task Layer (PTL)** engineered on top of the standard FreeRTOS kernel.
 
-I developed this layer to bridge that gap, enabling the deterministic, hard real-time behavior required for safety-critical embedded systems—such as smart sensor platforms, high-frequency measurement devices (e.g., LiDAR or ultrasonic ranging), and automotive microelectronics.
-
-**Note on Contributions:** The repository includes the standard FreeRTOS source tree. My direct contributions are concentrated entirely in the custom PTL scheduling logic, driver implementation, and the automated testing frameworks designed to verify system timing.
-
-## Architectural Focus & Automotive Relevance
-This project was built with a focus on product-oriented development and functionally safe software principles:
+**Note on Contributions:** The repository includes the standard FreeRTOS source tree. Contributions are concentrated entirely in the custom PTL scheduling logic, driver implementation, and the automated testing frameworks designed to verify system timing.
 
 * **Bare-Metal C & ARM Cortex-M:** The implementation is written in strict, bare-metal C, designed to run efficiently on ARM Cortex-M microcontrollers. It interacts directly with hardware timers and RTOS internals.
-* **Deterministic Timing for Sensors:** In automotive networks, polling a sensor or writing to a communication bus (like CAN or LIN) must happen exactly on schedule. This PTL allows developers to define exact Release Times (R) and Deadlines (D), ensuring data is processed within strict timing windows.
-* **Fault Detection & Handling:** A core component of functional safety (ISO 26262) is detecting when a system fails to meet its timing constraints. The PTL automatically detects **Deadline Misses** and **Period Overruns**, logging the violations and executing predefined recovery policies.
+* **Deterministic Timing for Sensors:** In automotive networks, polling a sensor or writing to a communication bus (like CAN) must happen exactly on schedule. This PTL allows developers to define exact Release Times (R) and Deadlines (D), ensuring data is processed within strict timing windows.
+* **Fault Detection & Handling:** A core component of functional safety is detecting when a system fails to meet its timing constraints. The PTL automatically detects **Deadline Misses** and **Period Overruns**, logging the violations and executing predefined recovery policies.
 
 ## Key Features Developed
 
