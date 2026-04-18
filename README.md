@@ -1,97 +1,62 @@
-# group37
+# FreeRTOS Bare-Metal Application & Testing Framework
 
+[![C](https://img.shields.io/badge/Language-C-blue.svg)](https://en.wikipedia.org/wiki/C_(programming_language))
+[![RTOS](https://img.shields.io/badge/OS-FreeRTOS-green.svg)](https://www.freertos.org/)
+[![Architecture](https://img.shields.io/badge/Arch-ARM_Cortex--M3-orange.svg)](https://developer.arm.com/ip-products/processors/cortex-m)
 
-## 🕒 Project 2 — Priority-Based Scheduler for Periodic Tasks in FreeRTOS
+## 📌 Project Overview
+This repository contains a bare-metal embedded application built on top of the **FreeRTOS** kernel. While the repository includes the standard FreeRTOS source and verification tools, **my core development and contribution reside entirely within the `freertos/Demo/` directory.**
 
-> **Goal:** Add first-class periodic tasks (period + deadline) **on top of** the default FreeRTOS scheduler, preserving FreeRTOS’s preemptive, priority-based semantics.
+The goal of this project was to configure a real-time operating system from scratch for an **ARM Cortex-M3** target (MPS2), develop bare-metal hardware drivers, and implement an automated testing pipeline to verify task scheduling and system behavior. 
 
+This project demonstrates my ability to work closely with hardware, configure RTOS environments, and implement rigorous testing methodologies—skills critical for the automotive and microelectronics industries.
 
+## 🚀 Key Features Developed (`Demo/` folder)
 
-### 🧭 1) Overview
+* **Bare-Metal ARM Cortex-M3 Initialization:** * Wrote the hardware startup code (`startup.c`) and custom linker scripts (`mps2_m3.ld`) to correctly initialize the memory layout, stack, and heap for the Cortex-M3 processor before handing control over to the RTOS.
+* **Custom Driver Development:** * Implemented a bare-metal UART driver (`uart.c`, `uart.h`) for serial communication without relying on heavy external HAL libraries.
+* **System Logging Architecture:** * Developed a structured logging system (`logging.c`, `logging_levels.h`) to trace task execution, RTOS state changes, and system events.
+* **Automated "Golden Master" Testing Framework:** * Designed a comprehensive testing plan (`testing_plan.md`) to validate RTOS behavior.
+  * Built a Bash-based automated test runner (`test_runner.sh`) that executes the compiled firmware, captures the serial output, and automatically compares it against expected "golden" reference files (`tests/golden/`). This ensures deterministic behavior and prevents regressions.
+* **RTOS Configuration:** * Tailored the `FreeRTOSConfig.h` to optimize task scheduling, memory management, and tick rates for the specific hardware target.
 
-FreeRTOS schedules tasks by priority but does not enforce **periodicity** or **deadlines**. This project introduces a thin **Periodic Task Layer (PTL)** that:
+## 🧰 Technology Stack
 
-- lets users **declare periodic tasks** with *period* and *deadline*,
-- performs **job releases** at the correct times,
-- detects **deadline misses** and **period overruns**,
-- and leaves **preemption** to FreeRTOS (unchanged).
+* **Language:** Embedded C 
+* **Operating System:** FreeRTOS (Custom configured)
+* **Target Architecture:** ARM Cortex-M3 (MPS2)
+* **Toolchain:** ARM GCC (`arm-none-eabi-gcc`), GNU Make
+* **Testing:** Bash scripting, Golden Master Testing (Output Verification)
 
-> The PTL must patch the kernel scheduler with minimal intrusivity to make it easily portable.
+## 📂 My Contribution Structure (`freertos/Demo/`)
 
-### 📚 2) Terminology
+    freertos/Demo/
+    ├── startup.c / mps2_m3.ld   # Bare-metal startup and memory linker scripts
+    ├── main.c / setup.c         # Application entry point and hardware setup
+    ├── uart.c / uart.h          # Bare-metal UART peripheral drivers
+    ├── logging.c / logging.h    # Custom diagnostic logging stack
+    ├── FreeRTOSConfig.h         # RTOS behavioral configuration
+    ├── testing_plan.md          # Documented test cases and expected outcomes
+    ├── test_runner.sh           # Automated test execution script
+    ├── tests/golden/            # Expected output files for verification
+    └── output/                  # Actual logs generated during test execution
 
-- **Period (T):** time between releases.  
-- **Deadline (D):** relative deadline from each release. If not specified, **D = T**.  
-- **Release time (Rₖ):** k-th activation time; if all tasks start together, **R₀ = t₀** for all.  
-- **Finish time (Fₖ):** time when job k completes.  
-- **Deadline miss:** `Fₖ > Rₖ + D`.  
-- **Overrun (period overrun):** previous job not finished at `Rₖ₊₁` (i.e., exceeds T).
+*(Note: Directories outside of `freertos/Demo/` contain the upstream FreeRTOS kernel, ports, and external verification tools provided by the FreeRTOS project).*
 
-### ⚙️ 3) Functional Requirements
+## 🛠️ Getting Started
 
-1. **Introduce dedicated periodic tasks API.** To create and handle tasks with `(period, deadline, priority, stack, name, entry)`.  
-2. **All tasks start together** (project requirement). *Optional*: allow a phase/offset parameter; if omitted, all start at t₀.  
-3. **Priority-based, preemptive scheduling** stays as in FreeRTOS.  
-4. **Round-robin** among tasks at **the same priority** (respecting FreeRTOS config).  
-5. **Deadline & period checks are mandatory.** On every job completion and at every new release, log and handle violations.  
-6. **Policy on overrun when a new release arrives** (pick one globally or per-task):  
-   - **SKIP**: skip the new job; let the late one finish.  
-   - **KILL**: terminate/suspend the running job immediately and release the new one.  
-   - **CATCH_UP**: release now, mark previous job missed, keep nominal cadence.  
-7. **Config structure** listing all periodic tasks and a `Configure/Start` entrypoint.  
+### Prerequisites
+* ARM GCC Toolchain (`arm-none-eabi-gcc`)
+* QEMU (for ARM Cortex-M emulation, if running without physical MPS2 hardware)
+* GNU Make
 
+### Building and Testing
+Navigate to the Demo directory to build the project and run the automated test suite:
 
-### 🧠 4) Task Model & Runtime Semantics
-
-Tasks are **functions with infinite loops** (or loops controlled by PTL termination). To minimize errors, the programmer must write only the body of the loop, and FreeRTOS must wrap it into the loop, minimizing the number of function calls.
-
-
-### ⏱️ 5) Deadline & Period Checks  — with Examples
-
-### Checks
-1. **Deadline:** On `JobComplete()`, compare `Fₖ` vs `Rₖ + D`. If `Fₖ > Rₖ + D` → **DEADLINE_MISS**.  
-2. **Period:** At `Rₖ₊₁`, if previous job isn’t complete → **OVERRUN**. Apply policy (SKIP/KILL/CATCH_UP), log action.
-
-### Example – Deadline miss
-- Task B: `T=20 ms`, `D=15 ms`.  
-- k-th job starts at 40 ms, finishes at 56 ms → `Fₖ=56 ms`, `Rₖ + D = 55 ms` → **miss**.
-
-### Example – Overrun with SKIP
-- Task A: `T=10 ms`. Job k is still running at 30 ms (= Rₖ₊₁).  
-- Policy **SKIP**: do not release job k+1 at 30 ms; continue running job k; next release at 40 ms; log `OVERRUN + SKIP`.
-
-### Example – Overrun with KILL
-- Same scenario, **KILL**: at 30 ms the PTL stops job k, releases job k+1 immediately; log `OVERRUN + KILL`.
-
-### Example – Overrun with CATCH_UP
-- At 30 ms release job k+1 immediately, mark job k as missed, maintain cadence; log `OVERRUN + CATCH_UP`.
-
----
-
-### 🧰 6) Configuration Interface — with Examples
-
-All scheduling parameters are provided in a dedicated configuration object you define.
-
-### Must capture
-- **Global:** policy (SKIP/KILL/CATCH_UP), tracing enable, max tasks.  
-- **Per Task:** `name, entry, arg, stack, priority, T, D(optional)`
-
-> If D not specified → **D = T**.
-
-### Example – Config sketch (pseudocode)
-```c
-SchedulerConfig cfg = {
-  .policy = POLICY_SKIP,
-  .trace_enabled = true,
-  .max_tasks = 8,
-  .tasks = {
-    { "A", TaskA, NULL, 512, 3, .period_ms = 10, .deadline_ms = 10 },
-    { "B", TaskB, NULL, 512, 2, .period_ms = 20, .deadline_ms = 15 },
-    { "C", TaskC, NULL, 512, 2, .period_ms = 50 },
-  },
-  .num_tasks = 3
-};
-
-Init(&cfg);
-Start(); // defines t₀; all tasks start together
-```
+    cd freertos/Demo
+    
+    # Build the firmware using Make
+    make all
+    
+    # Run the automated testing pipeline
+    ./test_runner.sh
